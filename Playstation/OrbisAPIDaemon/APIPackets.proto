@@ -80,6 +80,8 @@ enum APICommand
 	API_TARGET_SEND_FILE = 60;
 	API_TARGET_RECIEVE_FILE = 61;
 	API_TARGET_DELETE_FILE = 62;
+
+	API_EXT_GET_PAGES = 63;
 }
 
 enum AppState
@@ -239,6 +241,21 @@ message LibraryInfoPacket
 message LibraryListPacket
 {
 	repeated LibraryInfoPacket Libraries = 1;
+}
+
+message PagePacket
+{
+	string Name = 1;
+	uint64 Start = 2;
+	uint64 End = 3;
+	uint64 Offset = 4;
+	uint64 Size = 5;
+	uint32 Prot = 6;
+}
+
+message PagesListPacket
+{
+	repeated PagePacket Pages = 1;
 }
 
 message FilePacket

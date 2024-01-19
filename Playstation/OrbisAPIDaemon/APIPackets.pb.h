@@ -47,7 +47,7 @@ struct TableStruct_APIPackets_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[17]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[19]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -81,6 +81,12 @@ extern LibraryListPacketDefaultTypeInternal _LibraryListPacket_default_instance_
 class MemoryInfo;
 struct MemoryInfoDefaultTypeInternal;
 extern MemoryInfoDefaultTypeInternal _MemoryInfo_default_instance_;
+class PagePacket;
+struct PagePacketDefaultTypeInternal;
+extern PagePacketDefaultTypeInternal _PagePacket_default_instance_;
+class PagesListPacket;
+struct PagesListPacketDefaultTypeInternal;
+extern PagesListPacketDefaultTypeInternal _PagesListPacket_default_instance_;
 class ProcListPacket;
 struct ProcListPacketDefaultTypeInternal;
 extern ProcListPacketDefaultTypeInternal _ProcListPacket_default_instance_;
@@ -115,6 +121,8 @@ template<> ::InitialPacket* Arena::CreateMaybeMessage<::InitialPacket>(Arena*);
 template<> ::LibraryInfoPacket* Arena::CreateMaybeMessage<::LibraryInfoPacket>(Arena*);
 template<> ::LibraryListPacket* Arena::CreateMaybeMessage<::LibraryListPacket>(Arena*);
 template<> ::MemoryInfo* Arena::CreateMaybeMessage<::MemoryInfo>(Arena*);
+template<> ::PagePacket* Arena::CreateMaybeMessage<::PagePacket>(Arena*);
+template<> ::PagesListPacket* Arena::CreateMaybeMessage<::PagesListPacket>(Arena*);
 template<> ::ProcListPacket* Arena::CreateMaybeMessage<::ProcListPacket>(Arena*);
 template<> ::ProcPacket* Arena::CreateMaybeMessage<::ProcPacket>(Arena*);
 template<> ::RWPacket* Arena::CreateMaybeMessage<::RWPacket>(Arena*);
@@ -189,12 +197,13 @@ enum APICommand : int {
   API_TARGET_SEND_FILE = 60,
   API_TARGET_RECIEVE_FILE = 61,
   API_TARGET_DELETE_FILE = 62,
+  API_EXT_GET_PAGES = 63,
   APICommand_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   APICommand_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool APICommand_IsValid(int value);
 constexpr APICommand APICommand_MIN = API_APPS_CHECK_VER;
-constexpr APICommand APICommand_MAX = API_TARGET_DELETE_FILE;
+constexpr APICommand APICommand_MAX = API_EXT_GET_PAGES;
 constexpr int APICommand_ARRAYSIZE = APICommand_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* APICommand_descriptor();
@@ -3512,6 +3521,367 @@ class LibraryListPacket final :
 };
 // -------------------------------------------------------------------
 
+class PagePacket final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:PagePacket) */ {
+ public:
+  inline PagePacket() : PagePacket(nullptr) {}
+  ~PagePacket() override;
+  explicit constexpr PagePacket(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  PagePacket(const PagePacket& from);
+  PagePacket(PagePacket&& from) noexcept
+    : PagePacket() {
+    *this = ::std::move(from);
+  }
+
+  inline PagePacket& operator=(const PagePacket& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PagePacket& operator=(PagePacket&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const PagePacket& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const PagePacket* internal_default_instance() {
+    return reinterpret_cast<const PagePacket*>(
+               &_PagePacket_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    16;
+
+  friend void swap(PagePacket& a, PagePacket& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(PagePacket* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(PagePacket* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  PagePacket* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<PagePacket>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const PagePacket& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const PagePacket& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PagePacket* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "PagePacket";
+  }
+  protected:
+  explicit PagePacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNameFieldNumber = 1,
+    kStartFieldNumber = 2,
+    kEndFieldNumber = 3,
+    kOffsetFieldNumber = 4,
+    kSizeFieldNumber = 5,
+    kProtFieldNumber = 6,
+  };
+  // string Name = 1;
+  void clear_name();
+  const std::string& name() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_name(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_name();
+  PROTOBUF_NODISCARD std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // uint64 Start = 2;
+  void clear_start();
+  uint64_t start() const;
+  void set_start(uint64_t value);
+  private:
+  uint64_t _internal_start() const;
+  void _internal_set_start(uint64_t value);
+  public:
+
+  // uint64 End = 3;
+  void clear_end();
+  uint64_t end() const;
+  void set_end(uint64_t value);
+  private:
+  uint64_t _internal_end() const;
+  void _internal_set_end(uint64_t value);
+  public:
+
+  // uint64 Offset = 4;
+  void clear_offset();
+  uint64_t offset() const;
+  void set_offset(uint64_t value);
+  private:
+  uint64_t _internal_offset() const;
+  void _internal_set_offset(uint64_t value);
+  public:
+
+  // uint64 Size = 5;
+  void clear_size();
+  uint64_t size() const;
+  void set_size(uint64_t value);
+  private:
+  uint64_t _internal_size() const;
+  void _internal_set_size(uint64_t value);
+  public:
+
+  // uint32 Prot = 6;
+  void clear_prot();
+  uint32_t prot() const;
+  void set_prot(uint32_t value);
+  private:
+  uint32_t _internal_prot() const;
+  void _internal_set_prot(uint32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:PagePacket)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  uint64_t start_;
+  uint64_t end_;
+  uint64_t offset_;
+  uint64_t size_;
+  uint32_t prot_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_APIPackets_2eproto;
+};
+// -------------------------------------------------------------------
+
+class PagesListPacket final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:PagesListPacket) */ {
+ public:
+  inline PagesListPacket() : PagesListPacket(nullptr) {}
+  ~PagesListPacket() override;
+  explicit constexpr PagesListPacket(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  PagesListPacket(const PagesListPacket& from);
+  PagesListPacket(PagesListPacket&& from) noexcept
+    : PagesListPacket() {
+    *this = ::std::move(from);
+  }
+
+  inline PagesListPacket& operator=(const PagesListPacket& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PagesListPacket& operator=(PagesListPacket&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const PagesListPacket& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const PagesListPacket* internal_default_instance() {
+    return reinterpret_cast<const PagesListPacket*>(
+               &_PagesListPacket_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    17;
+
+  friend void swap(PagesListPacket& a, PagesListPacket& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(PagesListPacket* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(PagesListPacket* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  PagesListPacket* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<PagesListPacket>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const PagesListPacket& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const PagesListPacket& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PagesListPacket* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "PagesListPacket";
+  }
+  protected:
+  explicit PagesListPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kPagesFieldNumber = 1,
+  };
+  // repeated .PagePacket Pages = 1;
+  int pages_size() const;
+  private:
+  int _internal_pages_size() const;
+  public:
+  void clear_pages();
+  ::PagePacket* mutable_pages(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PagePacket >*
+      mutable_pages();
+  private:
+  const ::PagePacket& _internal_pages(int index) const;
+  ::PagePacket* _internal_add_pages();
+  public:
+  const ::PagePacket& pages(int index) const;
+  ::PagePacket* add_pages();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PagePacket >&
+      pages() const;
+
+  // @@protoc_insertion_point(class_scope:PagesListPacket)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PagePacket > pages_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_APIPackets_2eproto;
+};
+// -------------------------------------------------------------------
+
 class FilePacket final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:FilePacket) */ {
  public:
@@ -3560,7 +3930,7 @@ class FilePacket final :
                &_FilePacket_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    16;
+    18;
 
   friend void swap(FilePacket& a, FilePacket& b) {
     a.Swap(&b);
@@ -6521,6 +6891,205 @@ LibraryListPacket::libraries() const {
 
 // -------------------------------------------------------------------
 
+// PagePacket
+
+// string Name = 1;
+inline void PagePacket::clear_name() {
+  name_.ClearToEmpty();
+}
+inline const std::string& PagePacket::name() const {
+  // @@protoc_insertion_point(field_get:PagePacket.Name)
+  return _internal_name();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void PagePacket::set_name(ArgT0&& arg0, ArgT... args) {
+ 
+ name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:PagePacket.Name)
+}
+inline std::string* PagePacket::mutable_name() {
+  std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:PagePacket.Name)
+  return _s;
+}
+inline const std::string& PagePacket::_internal_name() const {
+  return name_.Get();
+}
+inline void PagePacket::_internal_set_name(const std::string& value) {
+  
+  name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* PagePacket::_internal_mutable_name() {
+  
+  return name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* PagePacket::release_name() {
+  // @@protoc_insertion_point(field_release:PagePacket.Name)
+  return name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void PagePacket::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    
+  } else {
+    
+  }
+  name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name,
+      GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (name_.IsDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited())) {
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:PagePacket.Name)
+}
+
+// uint64 Start = 2;
+inline void PagePacket::clear_start() {
+  start_ = uint64_t{0u};
+}
+inline uint64_t PagePacket::_internal_start() const {
+  return start_;
+}
+inline uint64_t PagePacket::start() const {
+  // @@protoc_insertion_point(field_get:PagePacket.Start)
+  return _internal_start();
+}
+inline void PagePacket::_internal_set_start(uint64_t value) {
+  
+  start_ = value;
+}
+inline void PagePacket::set_start(uint64_t value) {
+  _internal_set_start(value);
+  // @@protoc_insertion_point(field_set:PagePacket.Start)
+}
+
+// uint64 End = 3;
+inline void PagePacket::clear_end() {
+  end_ = uint64_t{0u};
+}
+inline uint64_t PagePacket::_internal_end() const {
+  return end_;
+}
+inline uint64_t PagePacket::end() const {
+  // @@protoc_insertion_point(field_get:PagePacket.End)
+  return _internal_end();
+}
+inline void PagePacket::_internal_set_end(uint64_t value) {
+  
+  end_ = value;
+}
+inline void PagePacket::set_end(uint64_t value) {
+  _internal_set_end(value);
+  // @@protoc_insertion_point(field_set:PagePacket.End)
+}
+
+// uint64 Offset = 4;
+inline void PagePacket::clear_offset() {
+  offset_ = uint64_t{0u};
+}
+inline uint64_t PagePacket::_internal_offset() const {
+  return offset_;
+}
+inline uint64_t PagePacket::offset() const {
+  // @@protoc_insertion_point(field_get:PagePacket.Offset)
+  return _internal_offset();
+}
+inline void PagePacket::_internal_set_offset(uint64_t value) {
+  
+  offset_ = value;
+}
+inline void PagePacket::set_offset(uint64_t value) {
+  _internal_set_offset(value);
+  // @@protoc_insertion_point(field_set:PagePacket.Offset)
+}
+
+// uint64 Size = 5;
+inline void PagePacket::clear_size() {
+  size_ = uint64_t{0u};
+}
+inline uint64_t PagePacket::_internal_size() const {
+  return size_;
+}
+inline uint64_t PagePacket::size() const {
+  // @@protoc_insertion_point(field_get:PagePacket.Size)
+  return _internal_size();
+}
+inline void PagePacket::_internal_set_size(uint64_t value) {
+  
+  size_ = value;
+}
+inline void PagePacket::set_size(uint64_t value) {
+  _internal_set_size(value);
+  // @@protoc_insertion_point(field_set:PagePacket.Size)
+}
+
+// uint32 Prot = 6;
+inline void PagePacket::clear_prot() {
+  prot_ = 0u;
+}
+inline uint32_t PagePacket::_internal_prot() const {
+  return prot_;
+}
+inline uint32_t PagePacket::prot() const {
+  // @@protoc_insertion_point(field_get:PagePacket.Prot)
+  return _internal_prot();
+}
+inline void PagePacket::_internal_set_prot(uint32_t value) {
+  
+  prot_ = value;
+}
+inline void PagePacket::set_prot(uint32_t value) {
+  _internal_set_prot(value);
+  // @@protoc_insertion_point(field_set:PagePacket.Prot)
+}
+
+// -------------------------------------------------------------------
+
+// PagesListPacket
+
+// repeated .PagePacket Pages = 1;
+inline int PagesListPacket::_internal_pages_size() const {
+  return pages_.size();
+}
+inline int PagesListPacket::pages_size() const {
+  return _internal_pages_size();
+}
+inline void PagesListPacket::clear_pages() {
+  pages_.Clear();
+}
+inline ::PagePacket* PagesListPacket::mutable_pages(int index) {
+  // @@protoc_insertion_point(field_mutable:PagesListPacket.Pages)
+  return pages_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PagePacket >*
+PagesListPacket::mutable_pages() {
+  // @@protoc_insertion_point(field_mutable_list:PagesListPacket.Pages)
+  return &pages_;
+}
+inline const ::PagePacket& PagesListPacket::_internal_pages(int index) const {
+  return pages_.Get(index);
+}
+inline const ::PagePacket& PagesListPacket::pages(int index) const {
+  // @@protoc_insertion_point(field_get:PagesListPacket.Pages)
+  return _internal_pages(index);
+}
+inline ::PagePacket* PagesListPacket::_internal_add_pages() {
+  return pages_.Add();
+}
+inline ::PagePacket* PagesListPacket::add_pages() {
+  ::PagePacket* _add = _internal_add_pages();
+  // @@protoc_insertion_point(field_add:PagesListPacket.Pages)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::PagePacket >&
+PagesListPacket::pages() const {
+  // @@protoc_insertion_point(field_list:PagesListPacket.Pages)
+  return pages_;
+}
+
+// -------------------------------------------------------------------
+
 // FilePacket
 
 // string FilePath = 1;
@@ -6577,6 +7146,10 @@ inline void FilePacket::set_allocated_filepath(std::string* filepath) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

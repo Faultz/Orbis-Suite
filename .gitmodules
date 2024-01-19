@@ -17,9 +17,6 @@
 [submodule "Playstation/External/StubMaker"]
 	path = Playstation/External/StubMaker
 	url = https://github.com/OSM-Made/StubMaker
-[submodule "Playstation/External/libKernelInterface"]
-	path = Playstation/External/libKernelInterface
-	url = https://github.com/OSM-Made/libKernelInterface
 [submodule "Playstation/External/OrbisUtils2"]
 	path = Playstation/External/OrbisUtils2
 	url = https://github.com/OSM-Made/OrbisUtils2
@@ -38,3 +35,6 @@
 [submodule "Playstation/External/Fusion"]
 	path = Playstation/External/Fusion
 	url = https://github.com/OSM-Made/Fusion-2.0
+[submodule "Playstation/External/libKernelInterface"]
+	path = Playstation/External/libKernelInterface
+	url = https://github.com/Faultz/libKernelInterface

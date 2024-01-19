@@ -64,6 +64,9 @@ const std::map<int, std::function<void(SceNetId s)>> API::APICommands =
 	{ API_TARGET_SEND_FILE, Target::SendFile },
 	{ API_TARGET_RECIEVE_FILE, Target::RecieveFile },
 	{ API_TARGET_DELETE_FILE, Target::DeleteFile },
+
+	// Ext
+	{ API_EXT_GET_PAGES, Library::GetPageList }
 };
 
 void API::ListenerCallback(void* tdParam, SceNetId s, SceNetInAddr sin_addr)

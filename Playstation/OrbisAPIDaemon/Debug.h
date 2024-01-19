@@ -13,6 +13,7 @@ public:
 	static void Current(SceNetId sock);
 	static void RWMemory(SceNetId Sock, bool write);
 
+	static void GetProcessMaps(SceNetId Sock);
 private:
 	static std::mutex DebugMtx;
 	static std::shared_ptr<ProcessMonitor> DebuggeeMonitor;

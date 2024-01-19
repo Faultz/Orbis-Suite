@@ -7,7 +7,7 @@ public:
 	static void UnloadLibrary(SceNetId Sock);
 	static void ReloadLibrary(SceNetId Sock);
 	static void GetLibraryList(SceNetId Sock);
-
+	static void GetPageList(SceNetId Sock);
 private:
 
 };
