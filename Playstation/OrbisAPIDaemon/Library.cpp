@@ -137,8 +137,8 @@ void Library::GetPageList(SceNetId s)
 	if (!Debug::CheckDebug(s))
 		return;
 
-	auto pages = std::make_unique<OrbisProcessPage[]>(500);
-	int actualCount = GetPages(Debug::CurrentPID, pages.get(), 500);
+	auto pages = std::make_unique<OrbisProcessPage[]>(1000);
+	int actualCount = GetPages(Debug::CurrentPID, pages.get(), 1000);
 
 	// Populate the vector list.
 	std::vector<PagePacket> vectorList;
