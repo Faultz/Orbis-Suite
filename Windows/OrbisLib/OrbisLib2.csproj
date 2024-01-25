@@ -38,10 +38,10 @@
 
   <ItemGroup>
     <Reference Include="Microsoft.Expression.Drawing">
-      <HintPath>..\..\External\SimpleUI\SimpleUI\bin\Release\net7.0-windows10.0.22621.0\Microsoft.Expression.Drawing.dll</HintPath>
+      <HintPath>..\..\..\..\Git\Orbis-Suite\External\SimpleUI\SimpleUI\bin\Debug\net7.0-windows10.0.22621.0\Microsoft.Expression.Drawing.dll</HintPath>
     </Reference>
     <Reference Include="SimpleUI">
-      <HintPath>..\..\External\SimpleUI\SimpleUI\bin\Release\net7.0-windows10.0.22621.0\SimpleUI.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Orbis Suite\OrbisSuiteService\SimpleUI.dll</HintPath>
     </Reference>
   </ItemGroup>
 

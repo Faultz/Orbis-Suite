@@ -317,7 +317,60 @@ struct FilePacketDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT FilePacketDefaultTypeInternal _FilePacket_default_instance_;
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_APIPackets_2eproto[19];
+constexpr ThreadInfoPacket::ThreadInfoPacket(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : name_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , tid_(0u){}
+struct ThreadInfoPacketDefaultTypeInternal {
+  constexpr ThreadInfoPacketDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~ThreadInfoPacketDefaultTypeInternal() {}
+  union {
+    ThreadInfoPacket _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ThreadInfoPacketDefaultTypeInternal _ThreadInfoPacket_default_instance_;
+constexpr ThreadListPacket::ThreadListPacket(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : threads_(){}
+struct ThreadListPacketDefaultTypeInternal {
+  constexpr ThreadListPacketDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~ThreadListPacketDefaultTypeInternal() {}
+  union {
+    ThreadListPacket _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ThreadListPacketDefaultTypeInternal _ThreadListPacket_default_instance_;
+constexpr WatchpointPacket::WatchpointPacket(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : index_(0u)
+  , enabled_(false)
+  , address_(uint64_t{0u})
+  , type_(0u)
+  , length_(0u){}
+struct WatchpointPacketDefaultTypeInternal {
+  constexpr WatchpointPacketDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~WatchpointPacketDefaultTypeInternal() {}
+  union {
+    WatchpointPacket _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT WatchpointPacketDefaultTypeInternal _WatchpointPacket_default_instance_;
+constexpr WatchpointListPacket::WatchpointListPacket(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : watchpoints_(){}
+struct WatchpointListPacketDefaultTypeInternal {
+  constexpr WatchpointListPacketDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~WatchpointListPacketDefaultTypeInternal() {}
+  union {
+    WatchpointListPacket _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT WatchpointListPacketDefaultTypeInternal _WatchpointListPacket_default_instance_;
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_APIPackets_2eproto[23];
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_APIPackets_2eproto[2];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_APIPackets_2eproto = nullptr;
 
@@ -528,6 +581,39 @@ const uint32_t TableStruct_APIPackets_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::FilePacket, filepath_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::ThreadInfoPacket, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::ThreadInfoPacket, tid_),
+  PROTOBUF_FIELD_OFFSET(::ThreadInfoPacket, name_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::ThreadListPacket, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::ThreadListPacket, threads_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::WatchpointPacket, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::WatchpointPacket, index_),
+  PROTOBUF_FIELD_OFFSET(::WatchpointPacket, enabled_),
+  PROTOBUF_FIELD_OFFSET(::WatchpointPacket, address_),
+  PROTOBUF_FIELD_OFFSET(::WatchpointPacket, type_),
+  PROTOBUF_FIELD_OFFSET(::WatchpointPacket, length_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::WatchpointListPacket, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::WatchpointListPacket, watchpoints_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::InitialPacket)},
@@ -549,6 +635,10 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 180, -1, -1, sizeof(::PagePacket)},
   { 192, -1, -1, sizeof(::PagesListPacket)},
   { 199, -1, -1, sizeof(::FilePacket)},
+  { 206, -1, -1, sizeof(::ThreadInfoPacket)},
+  { 214, -1, -1, sizeof(::ThreadListPacket)},
+  { 221, -1, -1, sizeof(::WatchpointPacket)},
+  { 232, -1, -1, sizeof(::WatchpointListPacket)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -571,6 +661,10 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_PagePacket_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_PagesListPacket_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_FilePacket_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_ThreadInfoPacket_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_ThreadListPacket_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_WatchpointPacket_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_WatchpointListPacket_default_instance_),
 };
 
 const char descriptor_table_protodef_APIPackets_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -628,54 +722,61 @@ const char descriptor_table_protodef_APIPackets_2eproto[] PROTOBUF_SECTION_VARIA
   "(\t\022\r\n\005Start\030\002 \001(\004\022\013\n\003End\030\003 \001(\004\022\016\n\006Offset"
   "\030\004 \001(\004\022\014\n\004Size\030\005 \001(\004\022\014\n\004Prot\030\006 \001(\r\"-\n\017Pa"
   "gesListPacket\022\032\n\005Pages\030\001 \003(\0132\013.PagePacke"
-  "t\"\036\n\nFilePacket\022\020\n\010FilePath\030\001 \001(\t*\247\014\n\nAP"
-  "ICommand\022\026\n\022API_APPS_CHECK_VER\020\000\022\023\n\017API_"
-  "APPS_GET_DB\020\001\022\031\n\025API_APPS_GET_INFO_STR\020\002"
-  "\022\023\n\017API_APPS_STATUS\020\003\022\022\n\016API_APPS_START\020"
-  "\004\022\021\n\rAPI_APPS_STOP\020\005\022\024\n\020API_APPS_SUSPEND"
-  "\020\006\022\023\n\017API_APPS_RESUME\020\007\022\023\n\017API_APPS_DELE"
-  "TE\020\010\022\033\n\027API_APPS_SET_VISIBILITY\020\t\022\033\n\027API"
-  "_APPS_GET_VISIBILITY\020\n\022\022\n\016API_DBG_ATTACH"
-  "\020\013\022\022\n\016API_DBG_DETACH\020\014\022\027\n\023API_DBG_GET_CU"
-  "RRENT\020\r\022\020\n\014API_DBG_READ\020\016\022\021\n\rAPI_DBG_WRI"
-  "TE\020\017\022\020\n\014API_DBG_KILL\020\020\022\021\n\rAPI_DBG_BREAK\020"
-  "\021\022\022\n\016API_DBG_RESUME\020\022\022\022\n\016API_DBG_SIGNAL\020"
-  "\023\022\020\n\014API_DBG_STEP\020\024\022\025\n\021API_DBG_STEP_OVER"
-  "\020\025\022\024\n\020API_DBG_STEP_OUT\020\026\022\031\n\025API_DBG_GET_"
-  "CALLSTACK\020\027\022\023\n\017API_DBG_GET_REG\020\030\022\023\n\017API_"
-  "DBG_SET_REG\020\031\022\024\n\020API_DBG_GET_FREG\020\032\022\024\n\020A"
-  "PI_DBG_SET_FREG\020\033\022\026\n\022API_DBG_GET_DBGREG\020"
-  "\034\022\026\n\022API_DBG_SET_DBGREG\020\035\022\030\n\024API_DBG_LOA"
-  "D_LIBRARY\020\036\022\032\n\026API_DBG_UNLOAD_LIBRARY\020\037\022"
-  "\032\n\026API_DBG_RELOAD_LIBRARY\020 \022\030\n\024API_DBG_L"
-  "IBRARY_LIST\020!\022\027\n\023API_DBG_THREAD_LIST\020\"\022\027"
-  "\n\023API_DBG_THREAD_STOP\020#\022\031\n\025API_DBG_THREA"
-  "D_RESUME\020$\022\036\n\032API_DBG_BREAKPOINT_GETFREE"
-  "\020%\022\032\n\026API_DBG_BREAKPOINT_SET\020&\022\035\n\031API_DB"
-  "G_BREAKPOINT_UPDATE\020\'\022\035\n\031API_DBG_BREAKPO"
-  "INT_REMOVE\020(\022\036\n\032API_DBG_BREAKPOINT_GETIN"
-  "FO\020)\022\033\n\027API_DBG_BREAKPOINT_LIST\020*\022\032\n\026API"
-  "_DBG_WATCHPOINT_SET\020+\022\035\n\031API_DBG_WATCHPO"
-  "INT_UPDATE\020,\022\035\n\031API_DBG_WATCHPOINT_REMOV"
-  "E\020-\022\036\n\032API_DBG_WATCHPOINT_GETINFO\020.\022\033\n\027A"
-  "PI_DBG_WATCHPOINT_LIST\020/\022\021\n\rAPI_KERN_BAS"
-  "E\0200\022\021\n\rAPI_KERN_READ\0201\022\022\n\016API_KERN_WRITE"
-  "\0202\022\023\n\017API_TARGET_INFO\0203\022\027\n\023API_TARGET_RE"
-  "STMODE\0204\022\027\n\023API_TARGET_SHUTDOWN\0205\022\025\n\021API"
-  "_TARGET_REBOOT\0206\022\025\n\021API_TARGET_NOTIFY\0207\022"
-  "\025\n\021API_TARGET_BUZZER\0208\022\026\n\022API_TARGET_SET"
-  "_LED\0209\022\033\n\027API_TARGET_SET_SETTINGS\020:\022\034\n\030A"
-  "PI_TARGET_GET_PROC_LIST\020;\022\030\n\024API_TARGET_"
-  "SEND_FILE\020<\022\033\n\027API_TARGET_RECIEVE_FILE\020="
-  "\022\032\n\026API_TARGET_DELETE_FILE\020>\022\025\n\021API_EXT_"
-  "GET_PAGES\020\?*I\n\010AppState\022\025\n\021STATE_NOT_RUN"
-  "NING\020\000\022\021\n\rSTATE_RUNNING\020\001\022\023\n\017STATE_SUSPE"
-  "NDED\020\002b\006proto3"
+  "t\"\036\n\nFilePacket\022\020\n\010FilePath\030\001 \001(\t\"-\n\020Thr"
+  "eadInfoPacket\022\013\n\003TID\030\001 \001(\r\022\014\n\004Name\030\002 \001(\t"
+  "\"6\n\020ThreadListPacket\022\"\n\007Threads\030\001 \003(\0132\021."
+  "ThreadInfoPacket\"a\n\020WatchpointPacket\022\r\n\005"
+  "Index\030\001 \001(\r\022\017\n\007Enabled\030\002 \001(\010\022\017\n\007Address\030"
+  "\003 \001(\004\022\014\n\004Type\030\004 \001(\r\022\016\n\006Length\030\005 \001(\r\">\n\024W"
+  "atchpointListPacket\022&\n\013Watchpoints\030\001 \003(\013"
+  "2\021.WatchpointPacket*\304\014\n\nAPICommand\022\026\n\022AP"
+  "I_APPS_CHECK_VER\020\000\022\023\n\017API_APPS_GET_DB\020\001\022"
+  "\031\n\025API_APPS_GET_INFO_STR\020\002\022\023\n\017API_APPS_S"
+  "TATUS\020\003\022\022\n\016API_APPS_START\020\004\022\021\n\rAPI_APPS_"
+  "STOP\020\005\022\024\n\020API_APPS_SUSPEND\020\006\022\023\n\017API_APPS"
+  "_RESUME\020\007\022\023\n\017API_APPS_DELETE\020\010\022\033\n\027API_AP"
+  "PS_SET_VISIBILITY\020\t\022\033\n\027API_APPS_GET_VISI"
+  "BILITY\020\n\022\022\n\016API_DBG_ATTACH\020\013\022\022\n\016API_DBG_"
+  "DETACH\020\014\022\027\n\023API_DBG_GET_CURRENT\020\r\022\020\n\014API"
+  "_DBG_READ\020\016\022\021\n\rAPI_DBG_WRITE\020\017\022\020\n\014API_DB"
+  "G_KILL\020\020\022\021\n\rAPI_DBG_BREAK\020\021\022\022\n\016API_DBG_R"
+  "ESUME\020\022\022\022\n\016API_DBG_SIGNAL\020\023\022\020\n\014API_DBG_S"
+  "TEP\020\024\022\025\n\021API_DBG_STEP_OVER\020\025\022\024\n\020API_DBG_"
+  "STEP_OUT\020\026\022\031\n\025API_DBG_GET_CALLSTACK\020\027\022\023\n"
+  "\017API_DBG_GET_REG\020\030\022\023\n\017API_DBG_SET_REG\020\031\022"
+  "\024\n\020API_DBG_GET_FREG\020\032\022\024\n\020API_DBG_SET_FRE"
+  "G\020\033\022\026\n\022API_DBG_GET_DBGREG\020\034\022\026\n\022API_DBG_S"
+  "ET_DBGREG\020\035\022\030\n\024API_DBG_LOAD_LIBRARY\020\036\022\032\n"
+  "\026API_DBG_UNLOAD_LIBRARY\020\037\022\032\n\026API_DBG_REL"
+  "OAD_LIBRARY\020 \022\030\n\024API_DBG_LIBRARY_LIST\020!\022"
+  "\027\n\023API_DBG_THREAD_LIST\020\"\022\027\n\023API_DBG_THRE"
+  "AD_STOP\020#\022\031\n\025API_DBG_THREAD_RESUME\020$\022\036\n\032"
+  "API_DBG_BREAKPOINT_GETFREE\020%\022\032\n\026API_DBG_"
+  "BREAKPOINT_SET\020&\022\035\n\031API_DBG_BREAKPOINT_U"
+  "PDATE\020\'\022\035\n\031API_DBG_BREAKPOINT_REMOVE\020(\022\036"
+  "\n\032API_DBG_BREAKPOINT_GETINFO\020)\022\033\n\027API_DB"
+  "G_BREAKPOINT_LIST\020*\022\032\n\026API_DBG_WATCHPOIN"
+  "T_SET\020+\022\035\n\031API_DBG_WATCHPOINT_UPDATE\020,\022\035"
+  "\n\031API_DBG_WATCHPOINT_REMOVE\020-\022\036\n\032API_DBG"
+  "_WATCHPOINT_GETINFO\020.\022\033\n\027API_DBG_WATCHPO"
+  "INT_LIST\020/\022\021\n\rAPI_KERN_BASE\0200\022\021\n\rAPI_KER"
+  "N_READ\0201\022\022\n\016API_KERN_WRITE\0202\022\023\n\017API_TARG"
+  "ET_INFO\0203\022\027\n\023API_TARGET_RESTMODE\0204\022\027\n\023AP"
+  "I_TARGET_SHUTDOWN\0205\022\025\n\021API_TARGET_REBOOT"
+  "\0206\022\025\n\021API_TARGET_NOTIFY\0207\022\025\n\021API_TARGET_"
+  "BUZZER\0208\022\026\n\022API_TARGET_SET_LED\0209\022\033\n\027API_"
+  "TARGET_SET_SETTINGS\020:\022\034\n\030API_TARGET_GET_"
+  "PROC_LIST\020;\022\030\n\024API_TARGET_SEND_FILE\020<\022\033\n"
+  "\027API_TARGET_RECIEVE_FILE\020=\022\032\n\026API_TARGET"
+  "_DELETE_FILE\020>\022\025\n\021API_EXT_GET_PAGES\020\?\022\033\n"
+  "\027API_EXT_GET_THREAD_INFO\020@*I\n\010AppState\022\025"
+  "\n\021STATE_NOT_RUNNING\020\000\022\021\n\rSTATE_RUNNING\020\001"
+  "\022\023\n\017STATE_SUSPENDED\020\002b\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_APIPackets_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_APIPackets_2eproto = {
-  false, false, 3854, descriptor_table_protodef_APIPackets_2eproto, "APIPackets.proto", 
-  &descriptor_table_APIPackets_2eproto_once, nullptr, 0, 19,
+  false, false, 4149, descriptor_table_protodef_APIPackets_2eproto, "APIPackets.proto", 
+  &descriptor_table_APIPackets_2eproto_once, nullptr, 0, 23,
   schemas, file_default_instances, TableStruct_APIPackets_2eproto::offsets,
   file_level_metadata_APIPackets_2eproto, file_level_enum_descriptors_APIPackets_2eproto, file_level_service_descriptors_APIPackets_2eproto,
 };
@@ -755,6 +856,7 @@ bool APICommand_IsValid(int value) {
     case 61:
     case 62:
     case 63:
+    case 64:
       return true;
     default:
       return false;
@@ -6795,6 +6897,883 @@ void FilePacket::InternalSwap(FilePacket* other) {
       file_level_metadata_APIPackets_2eproto[18]);
 }
 
+// ===================================================================
+
+class ThreadInfoPacket::_Internal {
+ public:
+};
+
+ThreadInfoPacket::ThreadInfoPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:ThreadInfoPacket)
+}
+ThreadInfoPacket::ThreadInfoPacket(const ThreadInfoPacket& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_name().empty()) {
+    name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_name(), 
+      GetArenaForAllocation());
+  }
+  tid_ = from.tid_;
+  // @@protoc_insertion_point(copy_constructor:ThreadInfoPacket)
+}
+
+inline void ThreadInfoPacket::SharedCtor() {
+name_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+tid_ = 0u;
+}
+
+ThreadInfoPacket::~ThreadInfoPacket() {
+  // @@protoc_insertion_point(destructor:ThreadInfoPacket)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void ThreadInfoPacket::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  name_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+void ThreadInfoPacket::ArenaDtor(void* object) {
+  ThreadInfoPacket* _this = reinterpret_cast< ThreadInfoPacket* >(object);
+  (void)_this;
+}
+void ThreadInfoPacket::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void ThreadInfoPacket::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void ThreadInfoPacket::Clear() {
+// @@protoc_insertion_point(message_clear_start:ThreadInfoPacket)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  name_.ClearToEmpty();
+  tid_ = 0u;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ThreadInfoPacket::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // uint32 TID = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          tid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string Name = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          auto str = _internal_mutable_name();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "ThreadInfoPacket.Name"));
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ThreadInfoPacket::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:ThreadInfoPacket)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 TID = 1;
+  if (this->_internal_tid() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_tid(), target);
+  }
+
+  // string Name = 2;
+  if (!this->_internal_name().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_name().data(), static_cast<int>(this->_internal_name().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "ThreadInfoPacket.Name");
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_name(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:ThreadInfoPacket)
+  return target;
+}
+
+size_t ThreadInfoPacket::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ThreadInfoPacket)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // string Name = 2;
+  if (!this->_internal_name().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_name());
+  }
+
+  // uint32 TID = 1;
+  if (this->_internal_tid() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_tid());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ThreadInfoPacket::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ThreadInfoPacket::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ThreadInfoPacket::GetClassData() const { return &_class_data_; }
+
+void ThreadInfoPacket::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<ThreadInfoPacket *>(to)->MergeFrom(
+      static_cast<const ThreadInfoPacket &>(from));
+}
+
+
+void ThreadInfoPacket::MergeFrom(const ThreadInfoPacket& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ThreadInfoPacket)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_name().empty()) {
+    _internal_set_name(from._internal_name());
+  }
+  if (from._internal_tid() != 0) {
+    _internal_set_tid(from._internal_tid());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ThreadInfoPacket::CopyFrom(const ThreadInfoPacket& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ThreadInfoPacket)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ThreadInfoPacket::IsInitialized() const {
+  return true;
+}
+
+void ThreadInfoPacket::InternalSwap(ThreadInfoPacket* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &name_, lhs_arena,
+      &other->name_, rhs_arena
+  );
+  swap(tid_, other->tid_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ThreadInfoPacket::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_APIPackets_2eproto_getter, &descriptor_table_APIPackets_2eproto_once,
+      file_level_metadata_APIPackets_2eproto[19]);
+}
+
+// ===================================================================
+
+class ThreadListPacket::_Internal {
+ public:
+};
+
+ThreadListPacket::ThreadListPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  threads_(arena) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:ThreadListPacket)
+}
+ThreadListPacket::ThreadListPacket(const ThreadListPacket& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      threads_(from.threads_) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:ThreadListPacket)
+}
+
+inline void ThreadListPacket::SharedCtor() {
+}
+
+ThreadListPacket::~ThreadListPacket() {
+  // @@protoc_insertion_point(destructor:ThreadListPacket)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void ThreadListPacket::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void ThreadListPacket::ArenaDtor(void* object) {
+  ThreadListPacket* _this = reinterpret_cast< ThreadListPacket* >(object);
+  (void)_this;
+}
+void ThreadListPacket::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void ThreadListPacket::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void ThreadListPacket::Clear() {
+// @@protoc_insertion_point(message_clear_start:ThreadListPacket)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  threads_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* ThreadListPacket::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // repeated .ThreadInfoPacket Threads = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_threads(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* ThreadListPacket::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:ThreadListPacket)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated .ThreadInfoPacket Threads = 1;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->_internal_threads_size()); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(1, this->_internal_threads(i), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:ThreadListPacket)
+  return target;
+}
+
+size_t ThreadListPacket::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:ThreadListPacket)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated .ThreadInfoPacket Threads = 1;
+  total_size += 1UL * this->_internal_threads_size();
+  for (const auto& msg : this->threads_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ThreadListPacket::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    ThreadListPacket::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ThreadListPacket::GetClassData() const { return &_class_data_; }
+
+void ThreadListPacket::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<ThreadListPacket *>(to)->MergeFrom(
+      static_cast<const ThreadListPacket &>(from));
+}
+
+
+void ThreadListPacket::MergeFrom(const ThreadListPacket& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:ThreadListPacket)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  threads_.MergeFrom(from.threads_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void ThreadListPacket::CopyFrom(const ThreadListPacket& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:ThreadListPacket)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ThreadListPacket::IsInitialized() const {
+  return true;
+}
+
+void ThreadListPacket::InternalSwap(ThreadListPacket* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  threads_.InternalSwap(&other->threads_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata ThreadListPacket::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_APIPackets_2eproto_getter, &descriptor_table_APIPackets_2eproto_once,
+      file_level_metadata_APIPackets_2eproto[20]);
+}
+
+// ===================================================================
+
+class WatchpointPacket::_Internal {
+ public:
+};
+
+WatchpointPacket::WatchpointPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:WatchpointPacket)
+}
+WatchpointPacket::WatchpointPacket(const WatchpointPacket& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&index_, &from.index_,
+    static_cast<size_t>(reinterpret_cast<char*>(&length_) -
+    reinterpret_cast<char*>(&index_)) + sizeof(length_));
+  // @@protoc_insertion_point(copy_constructor:WatchpointPacket)
+}
+
+inline void WatchpointPacket::SharedCtor() {
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&index_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&length_) -
+    reinterpret_cast<char*>(&index_)) + sizeof(length_));
+}
+
+WatchpointPacket::~WatchpointPacket() {
+  // @@protoc_insertion_point(destructor:WatchpointPacket)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void WatchpointPacket::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void WatchpointPacket::ArenaDtor(void* object) {
+  WatchpointPacket* _this = reinterpret_cast< WatchpointPacket* >(object);
+  (void)_this;
+}
+void WatchpointPacket::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void WatchpointPacket::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void WatchpointPacket::Clear() {
+// @@protoc_insertion_point(message_clear_start:WatchpointPacket)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&index_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&length_) -
+      reinterpret_cast<char*>(&index_)) + sizeof(length_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* WatchpointPacket::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // uint32 Index = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          index_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // bool Enabled = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          enabled_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint64 Address = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+          address_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint32 Type = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
+          type_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint32 Length = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+          length_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* WatchpointPacket::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:WatchpointPacket)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 Index = 1;
+  if (this->_internal_index() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_index(), target);
+  }
+
+  // bool Enabled = 2;
+  if (this->_internal_enabled() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(2, this->_internal_enabled(), target);
+  }
+
+  // uint64 Address = 3;
+  if (this->_internal_address() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt64ToArray(3, this->_internal_address(), target);
+  }
+
+  // uint32 Type = 4;
+  if (this->_internal_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(4, this->_internal_type(), target);
+  }
+
+  // uint32 Length = 5;
+  if (this->_internal_length() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(5, this->_internal_length(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:WatchpointPacket)
+  return target;
+}
+
+size_t WatchpointPacket::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:WatchpointPacket)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // uint32 Index = 1;
+  if (this->_internal_index() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_index());
+  }
+
+  // bool Enabled = 2;
+  if (this->_internal_enabled() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // uint64 Address = 3;
+  if (this->_internal_address() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt64SizePlusOne(this->_internal_address());
+  }
+
+  // uint32 Type = 4;
+  if (this->_internal_type() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_type());
+  }
+
+  // uint32 Length = 5;
+  if (this->_internal_length() != 0) {
+    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32SizePlusOne(this->_internal_length());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData WatchpointPacket::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    WatchpointPacket::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*WatchpointPacket::GetClassData() const { return &_class_data_; }
+
+void WatchpointPacket::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<WatchpointPacket *>(to)->MergeFrom(
+      static_cast<const WatchpointPacket &>(from));
+}
+
+
+void WatchpointPacket::MergeFrom(const WatchpointPacket& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:WatchpointPacket)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_index() != 0) {
+    _internal_set_index(from._internal_index());
+  }
+  if (from._internal_enabled() != 0) {
+    _internal_set_enabled(from._internal_enabled());
+  }
+  if (from._internal_address() != 0) {
+    _internal_set_address(from._internal_address());
+  }
+  if (from._internal_type() != 0) {
+    _internal_set_type(from._internal_type());
+  }
+  if (from._internal_length() != 0) {
+    _internal_set_length(from._internal_length());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void WatchpointPacket::CopyFrom(const WatchpointPacket& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:WatchpointPacket)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool WatchpointPacket::IsInitialized() const {
+  return true;
+}
+
+void WatchpointPacket::InternalSwap(WatchpointPacket* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(WatchpointPacket, length_)
+      + sizeof(WatchpointPacket::length_)
+      - PROTOBUF_FIELD_OFFSET(WatchpointPacket, index_)>(
+          reinterpret_cast<char*>(&index_),
+          reinterpret_cast<char*>(&other->index_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata WatchpointPacket::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_APIPackets_2eproto_getter, &descriptor_table_APIPackets_2eproto_once,
+      file_level_metadata_APIPackets_2eproto[21]);
+}
+
+// ===================================================================
+
+class WatchpointListPacket::_Internal {
+ public:
+};
+
+WatchpointListPacket::WatchpointListPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
+  watchpoints_(arena) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:WatchpointListPacket)
+}
+WatchpointListPacket::WatchpointListPacket(const WatchpointListPacket& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      watchpoints_(from.watchpoints_) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:WatchpointListPacket)
+}
+
+inline void WatchpointListPacket::SharedCtor() {
+}
+
+WatchpointListPacket::~WatchpointListPacket() {
+  // @@protoc_insertion_point(destructor:WatchpointListPacket)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void WatchpointListPacket::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void WatchpointListPacket::ArenaDtor(void* object) {
+  WatchpointListPacket* _this = reinterpret_cast< WatchpointListPacket* >(object);
+  (void)_this;
+}
+void WatchpointListPacket::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void WatchpointListPacket::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void WatchpointListPacket::Clear() {
+// @@protoc_insertion_point(message_clear_start:WatchpointListPacket)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  watchpoints_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* WatchpointListPacket::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // repeated .WatchpointPacket Watchpoints = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_watchpoints(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* WatchpointListPacket::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:WatchpointListPacket)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated .WatchpointPacket Watchpoints = 1;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->_internal_watchpoints_size()); i < n; i++) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(1, this->_internal_watchpoints(i), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:WatchpointListPacket)
+  return target;
+}
+
+size_t WatchpointListPacket::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:WatchpointListPacket)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated .WatchpointPacket Watchpoints = 1;
+  total_size += 1UL * this->_internal_watchpoints_size();
+  for (const auto& msg : this->watchpoints_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData WatchpointListPacket::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    WatchpointListPacket::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*WatchpointListPacket::GetClassData() const { return &_class_data_; }
+
+void WatchpointListPacket::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<WatchpointListPacket *>(to)->MergeFrom(
+      static_cast<const WatchpointListPacket &>(from));
+}
+
+
+void WatchpointListPacket::MergeFrom(const WatchpointListPacket& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:WatchpointListPacket)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  watchpoints_.MergeFrom(from.watchpoints_);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void WatchpointListPacket::CopyFrom(const WatchpointListPacket& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:WatchpointListPacket)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool WatchpointListPacket::IsInitialized() const {
+  return true;
+}
+
+void WatchpointListPacket::InternalSwap(WatchpointListPacket* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  watchpoints_.InternalSwap(&other->watchpoints_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata WatchpointListPacket::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_APIPackets_2eproto_getter, &descriptor_table_APIPackets_2eproto_once,
+      file_level_metadata_APIPackets_2eproto[22]);
+}
+
 // @@protoc_insertion_point(namespace_scope)
 PROTOBUF_NAMESPACE_OPEN
 template<> PROTOBUF_NOINLINE ::InitialPacket* Arena::CreateMaybeMessage< ::InitialPacket >(Arena* arena) {
@@ -6853,6 +7832,18 @@ template<> PROTOBUF_NOINLINE ::PagesListPacket* Arena::CreateMaybeMessage< ::Pag
 }
 template<> PROTOBUF_NOINLINE ::FilePacket* Arena::CreateMaybeMessage< ::FilePacket >(Arena* arena) {
   return Arena::CreateMessageInternal< ::FilePacket >(arena);
+}
+template<> PROTOBUF_NOINLINE ::ThreadInfoPacket* Arena::CreateMaybeMessage< ::ThreadInfoPacket >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::ThreadInfoPacket >(arena);
+}
+template<> PROTOBUF_NOINLINE ::ThreadListPacket* Arena::CreateMaybeMessage< ::ThreadListPacket >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::ThreadListPacket >(arena);
+}
+template<> PROTOBUF_NOINLINE ::WatchpointPacket* Arena::CreateMaybeMessage< ::WatchpointPacket >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::WatchpointPacket >(arena);
+}
+template<> PROTOBUF_NOINLINE ::WatchpointListPacket* Arena::CreateMaybeMessage< ::WatchpointListPacket >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::WatchpointListPacket >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

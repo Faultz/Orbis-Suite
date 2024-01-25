@@ -30,16 +30,16 @@ const std::map<int, std::function<void(SceNetId s)>> API::APICommands =
 	{ API_DBG_GET_CURRENT, Debug::Current },
 	{ API_DBG_READ, [](SceNetId s) { Debug::RWMemory(s, false); } },
 	{ API_DBG_WRITE, [](SceNetId s) { Debug::RWMemory(s, true); } },
-	//API_DBG_KILL,
-	//API_DBG_BREAK,
-	//API_DBG_RESUME,
+	{ API_DBG_KILL, Debug::Kill },
+	{ API_DBG_BREAK, Debug::Stop },
+	{ API_DBG_RESUME, Debug::Resume },
 	//API_DBG_SIGNAL,
 	//API_DBG_STEP,
 	//API_DBG_STEP_OVER,
 	//API_DBG_STEP_OUT,
 	//API_DBG_GET_CALLSTACK,
-	//API_DBG_GET_REG,
-	//API_DBG_SET_REG,
+	//{ API_DBG_GET_REG, Debug::GetThreadRegisters },
+	//{ API_DBG_SET_REG, Debug::SetThreadRegisters },
 	//API_DBG_GET_FREG,
 	//API_DBG_SET_FREG,
 	//API_DBG_GET_DBGREG,
@@ -50,6 +50,16 @@ const std::map<int, std::function<void(SceNetId s)>> API::APICommands =
 	{ API_DBG_UNLOAD_LIBRARY, Library::UnloadLibrary },
 	{ API_DBG_RELOAD_LIBRARY, Library::ReloadLibrary },
 	{ API_DBG_LIBRARY_LIST, Library::GetLibraryList },
+
+	// Thread Commands
+	{ API_DBG_THREAD_LIST, Debug::GetThreadList },
+	{ API_DBG_THREAD_STOP, Debug::StopThread },
+	{ API_DBG_THREAD_RESUME, Debug::ResumeThread },
+
+	// Watchpoint Commands
+	{ API_DBG_WATCHPOINT_SET, Debug::SetWatchpoint },
+	{ API_DBG_WATCHPOINT_REMOVE, Debug::RemoveWatchpoint },
+	{ API_DBG_WATCHPOINT_LIST, Debug::GetWatchpointList },
 
 	// Target Commands
 	{ API_TARGET_INFO, Target::SendTargetInfo },
@@ -66,7 +76,8 @@ const std::map<int, std::function<void(SceNetId s)>> API::APICommands =
 	{ API_TARGET_DELETE_FILE, Target::DeleteFile },
 
 	// Ext
-	{ API_EXT_GET_PAGES, Library::GetPageList }
+	{ API_EXT_GET_PAGES, Library::GetPageList },
+	{ API_EXT_GET_THREAD_INFO, Debug::GetThreadInfo }
 };
 
 void API::ListenerCallback(void* tdParam, SceNetId s, SceNetInAddr sin_addr)

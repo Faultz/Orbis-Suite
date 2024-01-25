@@ -47,7 +47,7 @@ struct TableStruct_APIPackets_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[19]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[23]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -111,6 +111,18 @@ extern TargetNotifyPacketDefaultTypeInternal _TargetNotifyPacket_default_instanc
 class TargetSettingsPacket;
 struct TargetSettingsPacketDefaultTypeInternal;
 extern TargetSettingsPacketDefaultTypeInternal _TargetSettingsPacket_default_instance_;
+class ThreadInfoPacket;
+struct ThreadInfoPacketDefaultTypeInternal;
+extern ThreadInfoPacketDefaultTypeInternal _ThreadInfoPacket_default_instance_;
+class ThreadListPacket;
+struct ThreadListPacketDefaultTypeInternal;
+extern ThreadListPacketDefaultTypeInternal _ThreadListPacket_default_instance_;
+class WatchpointListPacket;
+struct WatchpointListPacketDefaultTypeInternal;
+extern WatchpointListPacketDefaultTypeInternal _WatchpointListPacket_default_instance_;
+class WatchpointPacket;
+struct WatchpointPacketDefaultTypeInternal;
+extern WatchpointPacketDefaultTypeInternal _WatchpointPacket_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::AppInfoListPacket* Arena::CreateMaybeMessage<::AppInfoListPacket>(Arena*);
 template<> ::AppInfoPacket* Arena::CreateMaybeMessage<::AppInfoPacket>(Arena*);
@@ -131,6 +143,10 @@ template<> ::SPRXPacket* Arena::CreateMaybeMessage<::SPRXPacket>(Arena*);
 template<> ::TargetInfoPacket* Arena::CreateMaybeMessage<::TargetInfoPacket>(Arena*);
 template<> ::TargetNotifyPacket* Arena::CreateMaybeMessage<::TargetNotifyPacket>(Arena*);
 template<> ::TargetSettingsPacket* Arena::CreateMaybeMessage<::TargetSettingsPacket>(Arena*);
+template<> ::ThreadInfoPacket* Arena::CreateMaybeMessage<::ThreadInfoPacket>(Arena*);
+template<> ::ThreadListPacket* Arena::CreateMaybeMessage<::ThreadListPacket>(Arena*);
+template<> ::WatchpointListPacket* Arena::CreateMaybeMessage<::WatchpointListPacket>(Arena*);
+template<> ::WatchpointPacket* Arena::CreateMaybeMessage<::WatchpointPacket>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 
 enum APICommand : int {
@@ -198,12 +214,13 @@ enum APICommand : int {
   API_TARGET_RECIEVE_FILE = 61,
   API_TARGET_DELETE_FILE = 62,
   API_EXT_GET_PAGES = 63,
+  API_EXT_GET_THREAD_INFO = 64,
   APICommand_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   APICommand_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 bool APICommand_IsValid(int value);
 constexpr APICommand APICommand_MIN = API_APPS_CHECK_VER;
-constexpr APICommand APICommand_MAX = API_EXT_GET_PAGES;
+constexpr APICommand APICommand_MAX = API_EXT_GET_THREAD_INFO;
 constexpr int APICommand_ARRAYSIZE = APICommand_MAX + 1;
 
 const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* APICommand_descriptor();
@@ -4031,6 +4048,668 @@ class FilePacket final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_APIPackets_2eproto;
 };
+// -------------------------------------------------------------------
+
+class ThreadInfoPacket final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:ThreadInfoPacket) */ {
+ public:
+  inline ThreadInfoPacket() : ThreadInfoPacket(nullptr) {}
+  ~ThreadInfoPacket() override;
+  explicit constexpr ThreadInfoPacket(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ThreadInfoPacket(const ThreadInfoPacket& from);
+  ThreadInfoPacket(ThreadInfoPacket&& from) noexcept
+    : ThreadInfoPacket() {
+    *this = ::std::move(from);
+  }
+
+  inline ThreadInfoPacket& operator=(const ThreadInfoPacket& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ThreadInfoPacket& operator=(ThreadInfoPacket&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ThreadInfoPacket& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ThreadInfoPacket* internal_default_instance() {
+    return reinterpret_cast<const ThreadInfoPacket*>(
+               &_ThreadInfoPacket_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    19;
+
+  friend void swap(ThreadInfoPacket& a, ThreadInfoPacket& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ThreadInfoPacket* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ThreadInfoPacket* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ThreadInfoPacket* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ThreadInfoPacket>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ThreadInfoPacket& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const ThreadInfoPacket& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ThreadInfoPacket* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "ThreadInfoPacket";
+  }
+  protected:
+  explicit ThreadInfoPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kNameFieldNumber = 2,
+    kTIDFieldNumber = 1,
+  };
+  // string Name = 2;
+  void clear_name();
+  const std::string& name() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_name(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_name();
+  PROTOBUF_NODISCARD std::string* release_name();
+  void set_allocated_name(std::string* name);
+  private:
+  const std::string& _internal_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(const std::string& value);
+  std::string* _internal_mutable_name();
+  public:
+
+  // uint32 TID = 1;
+  void clear_tid();
+  uint32_t tid() const;
+  void set_tid(uint32_t value);
+  private:
+  uint32_t _internal_tid() const;
+  void _internal_set_tid(uint32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:ThreadInfoPacket)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr name_;
+  uint32_t tid_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_APIPackets_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ThreadListPacket final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:ThreadListPacket) */ {
+ public:
+  inline ThreadListPacket() : ThreadListPacket(nullptr) {}
+  ~ThreadListPacket() override;
+  explicit constexpr ThreadListPacket(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ThreadListPacket(const ThreadListPacket& from);
+  ThreadListPacket(ThreadListPacket&& from) noexcept
+    : ThreadListPacket() {
+    *this = ::std::move(from);
+  }
+
+  inline ThreadListPacket& operator=(const ThreadListPacket& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ThreadListPacket& operator=(ThreadListPacket&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ThreadListPacket& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ThreadListPacket* internal_default_instance() {
+    return reinterpret_cast<const ThreadListPacket*>(
+               &_ThreadListPacket_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    20;
+
+  friend void swap(ThreadListPacket& a, ThreadListPacket& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ThreadListPacket* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ThreadListPacket* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ThreadListPacket* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ThreadListPacket>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ThreadListPacket& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const ThreadListPacket& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ThreadListPacket* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "ThreadListPacket";
+  }
+  protected:
+  explicit ThreadListPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kThreadsFieldNumber = 1,
+  };
+  // repeated .ThreadInfoPacket Threads = 1;
+  int threads_size() const;
+  private:
+  int _internal_threads_size() const;
+  public:
+  void clear_threads();
+  ::ThreadInfoPacket* mutable_threads(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::ThreadInfoPacket >*
+      mutable_threads();
+  private:
+  const ::ThreadInfoPacket& _internal_threads(int index) const;
+  ::ThreadInfoPacket* _internal_add_threads();
+  public:
+  const ::ThreadInfoPacket& threads(int index) const;
+  ::ThreadInfoPacket* add_threads();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::ThreadInfoPacket >&
+      threads() const;
+
+  // @@protoc_insertion_point(class_scope:ThreadListPacket)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::ThreadInfoPacket > threads_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_APIPackets_2eproto;
+};
+// -------------------------------------------------------------------
+
+class WatchpointPacket final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:WatchpointPacket) */ {
+ public:
+  inline WatchpointPacket() : WatchpointPacket(nullptr) {}
+  ~WatchpointPacket() override;
+  explicit constexpr WatchpointPacket(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  WatchpointPacket(const WatchpointPacket& from);
+  WatchpointPacket(WatchpointPacket&& from) noexcept
+    : WatchpointPacket() {
+    *this = ::std::move(from);
+  }
+
+  inline WatchpointPacket& operator=(const WatchpointPacket& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WatchpointPacket& operator=(WatchpointPacket&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WatchpointPacket& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const WatchpointPacket* internal_default_instance() {
+    return reinterpret_cast<const WatchpointPacket*>(
+               &_WatchpointPacket_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    21;
+
+  friend void swap(WatchpointPacket& a, WatchpointPacket& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(WatchpointPacket* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WatchpointPacket* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WatchpointPacket* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<WatchpointPacket>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const WatchpointPacket& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const WatchpointPacket& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(WatchpointPacket* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "WatchpointPacket";
+  }
+  protected:
+  explicit WatchpointPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIndexFieldNumber = 1,
+    kEnabledFieldNumber = 2,
+    kAddressFieldNumber = 3,
+    kTypeFieldNumber = 4,
+    kLengthFieldNumber = 5,
+  };
+  // uint32 Index = 1;
+  void clear_index();
+  uint32_t index() const;
+  void set_index(uint32_t value);
+  private:
+  uint32_t _internal_index() const;
+  void _internal_set_index(uint32_t value);
+  public:
+
+  // bool Enabled = 2;
+  void clear_enabled();
+  bool enabled() const;
+  void set_enabled(bool value);
+  private:
+  bool _internal_enabled() const;
+  void _internal_set_enabled(bool value);
+  public:
+
+  // uint64 Address = 3;
+  void clear_address();
+  uint64_t address() const;
+  void set_address(uint64_t value);
+  private:
+  uint64_t _internal_address() const;
+  void _internal_set_address(uint64_t value);
+  public:
+
+  // uint32 Type = 4;
+  void clear_type();
+  uint32_t type() const;
+  void set_type(uint32_t value);
+  private:
+  uint32_t _internal_type() const;
+  void _internal_set_type(uint32_t value);
+  public:
+
+  // uint32 Length = 5;
+  void clear_length();
+  uint32_t length() const;
+  void set_length(uint32_t value);
+  private:
+  uint32_t _internal_length() const;
+  void _internal_set_length(uint32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:WatchpointPacket)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  uint32_t index_;
+  bool enabled_;
+  uint64_t address_;
+  uint32_t type_;
+  uint32_t length_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_APIPackets_2eproto;
+};
+// -------------------------------------------------------------------
+
+class WatchpointListPacket final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:WatchpointListPacket) */ {
+ public:
+  inline WatchpointListPacket() : WatchpointListPacket(nullptr) {}
+  ~WatchpointListPacket() override;
+  explicit constexpr WatchpointListPacket(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  WatchpointListPacket(const WatchpointListPacket& from);
+  WatchpointListPacket(WatchpointListPacket&& from) noexcept
+    : WatchpointListPacket() {
+    *this = ::std::move(from);
+  }
+
+  inline WatchpointListPacket& operator=(const WatchpointListPacket& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WatchpointListPacket& operator=(WatchpointListPacket&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WatchpointListPacket& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const WatchpointListPacket* internal_default_instance() {
+    return reinterpret_cast<const WatchpointListPacket*>(
+               &_WatchpointListPacket_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    22;
+
+  friend void swap(WatchpointListPacket& a, WatchpointListPacket& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(WatchpointListPacket* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WatchpointListPacket* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WatchpointListPacket* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<WatchpointListPacket>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const WatchpointListPacket& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const WatchpointListPacket& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(WatchpointListPacket* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "WatchpointListPacket";
+  }
+  protected:
+  explicit WatchpointListPacket(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kWatchpointsFieldNumber = 1,
+  };
+  // repeated .WatchpointPacket Watchpoints = 1;
+  int watchpoints_size() const;
+  private:
+  int _internal_watchpoints_size() const;
+  public:
+  void clear_watchpoints();
+  ::WatchpointPacket* mutable_watchpoints(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchpointPacket >*
+      mutable_watchpoints();
+  private:
+  const ::WatchpointPacket& _internal_watchpoints(int index) const;
+  ::WatchpointPacket* _internal_add_watchpoints();
+  public:
+  const ::WatchpointPacket& watchpoints(int index) const;
+  ::WatchpointPacket* add_watchpoints();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchpointPacket >&
+      watchpoints() const;
+
+  // @@protoc_insertion_point(class_scope:WatchpointListPacket)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchpointPacket > watchpoints_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_APIPackets_2eproto;
+};
 // ===================================================================
 
 
@@ -7143,9 +7822,284 @@ inline void FilePacket::set_allocated_filepath(std::string* filepath) {
   // @@protoc_insertion_point(field_set_allocated:FilePacket.FilePath)
 }
 
+// -------------------------------------------------------------------
+
+// ThreadInfoPacket
+
+// uint32 TID = 1;
+inline void ThreadInfoPacket::clear_tid() {
+  tid_ = 0u;
+}
+inline uint32_t ThreadInfoPacket::_internal_tid() const {
+  return tid_;
+}
+inline uint32_t ThreadInfoPacket::tid() const {
+  // @@protoc_insertion_point(field_get:ThreadInfoPacket.TID)
+  return _internal_tid();
+}
+inline void ThreadInfoPacket::_internal_set_tid(uint32_t value) {
+  
+  tid_ = value;
+}
+inline void ThreadInfoPacket::set_tid(uint32_t value) {
+  _internal_set_tid(value);
+  // @@protoc_insertion_point(field_set:ThreadInfoPacket.TID)
+}
+
+// string Name = 2;
+inline void ThreadInfoPacket::clear_name() {
+  name_.ClearToEmpty();
+}
+inline const std::string& ThreadInfoPacket::name() const {
+  // @@protoc_insertion_point(field_get:ThreadInfoPacket.Name)
+  return _internal_name();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void ThreadInfoPacket::set_name(ArgT0&& arg0, ArgT... args) {
+ 
+ name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:ThreadInfoPacket.Name)
+}
+inline std::string* ThreadInfoPacket::mutable_name() {
+  std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:ThreadInfoPacket.Name)
+  return _s;
+}
+inline const std::string& ThreadInfoPacket::_internal_name() const {
+  return name_.Get();
+}
+inline void ThreadInfoPacket::_internal_set_name(const std::string& value) {
+  
+  name_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* ThreadInfoPacket::_internal_mutable_name() {
+  
+  return name_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* ThreadInfoPacket::release_name() {
+  // @@protoc_insertion_point(field_release:ThreadInfoPacket.Name)
+  return name_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void ThreadInfoPacket::set_allocated_name(std::string* name) {
+  if (name != nullptr) {
+    
+  } else {
+    
+  }
+  name_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), name,
+      GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (name_.IsDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited())) {
+    name_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), "", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:ThreadInfoPacket.Name)
+}
+
+// -------------------------------------------------------------------
+
+// ThreadListPacket
+
+// repeated .ThreadInfoPacket Threads = 1;
+inline int ThreadListPacket::_internal_threads_size() const {
+  return threads_.size();
+}
+inline int ThreadListPacket::threads_size() const {
+  return _internal_threads_size();
+}
+inline void ThreadListPacket::clear_threads() {
+  threads_.Clear();
+}
+inline ::ThreadInfoPacket* ThreadListPacket::mutable_threads(int index) {
+  // @@protoc_insertion_point(field_mutable:ThreadListPacket.Threads)
+  return threads_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::ThreadInfoPacket >*
+ThreadListPacket::mutable_threads() {
+  // @@protoc_insertion_point(field_mutable_list:ThreadListPacket.Threads)
+  return &threads_;
+}
+inline const ::ThreadInfoPacket& ThreadListPacket::_internal_threads(int index) const {
+  return threads_.Get(index);
+}
+inline const ::ThreadInfoPacket& ThreadListPacket::threads(int index) const {
+  // @@protoc_insertion_point(field_get:ThreadListPacket.Threads)
+  return _internal_threads(index);
+}
+inline ::ThreadInfoPacket* ThreadListPacket::_internal_add_threads() {
+  return threads_.Add();
+}
+inline ::ThreadInfoPacket* ThreadListPacket::add_threads() {
+  ::ThreadInfoPacket* _add = _internal_add_threads();
+  // @@protoc_insertion_point(field_add:ThreadListPacket.Threads)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::ThreadInfoPacket >&
+ThreadListPacket::threads() const {
+  // @@protoc_insertion_point(field_list:ThreadListPacket.Threads)
+  return threads_;
+}
+
+// -------------------------------------------------------------------
+
+// WatchpointPacket
+
+// uint32 Index = 1;
+inline void WatchpointPacket::clear_index() {
+  index_ = 0u;
+}
+inline uint32_t WatchpointPacket::_internal_index() const {
+  return index_;
+}
+inline uint32_t WatchpointPacket::index() const {
+  // @@protoc_insertion_point(field_get:WatchpointPacket.Index)
+  return _internal_index();
+}
+inline void WatchpointPacket::_internal_set_index(uint32_t value) {
+  
+  index_ = value;
+}
+inline void WatchpointPacket::set_index(uint32_t value) {
+  _internal_set_index(value);
+  // @@protoc_insertion_point(field_set:WatchpointPacket.Index)
+}
+
+// bool Enabled = 2;
+inline void WatchpointPacket::clear_enabled() {
+  enabled_ = false;
+}
+inline bool WatchpointPacket::_internal_enabled() const {
+  return enabled_;
+}
+inline bool WatchpointPacket::enabled() const {
+  // @@protoc_insertion_point(field_get:WatchpointPacket.Enabled)
+  return _internal_enabled();
+}
+inline void WatchpointPacket::_internal_set_enabled(bool value) {
+  
+  enabled_ = value;
+}
+inline void WatchpointPacket::set_enabled(bool value) {
+  _internal_set_enabled(value);
+  // @@protoc_insertion_point(field_set:WatchpointPacket.Enabled)
+}
+
+// uint64 Address = 3;
+inline void WatchpointPacket::clear_address() {
+  address_ = uint64_t{0u};
+}
+inline uint64_t WatchpointPacket::_internal_address() const {
+  return address_;
+}
+inline uint64_t WatchpointPacket::address() const {
+  // @@protoc_insertion_point(field_get:WatchpointPacket.Address)
+  return _internal_address();
+}
+inline void WatchpointPacket::_internal_set_address(uint64_t value) {
+  
+  address_ = value;
+}
+inline void WatchpointPacket::set_address(uint64_t value) {
+  _internal_set_address(value);
+  // @@protoc_insertion_point(field_set:WatchpointPacket.Address)
+}
+
+// uint32 Type = 4;
+inline void WatchpointPacket::clear_type() {
+  type_ = 0u;
+}
+inline uint32_t WatchpointPacket::_internal_type() const {
+  return type_;
+}
+inline uint32_t WatchpointPacket::type() const {
+  // @@protoc_insertion_point(field_get:WatchpointPacket.Type)
+  return _internal_type();
+}
+inline void WatchpointPacket::_internal_set_type(uint32_t value) {
+  
+  type_ = value;
+}
+inline void WatchpointPacket::set_type(uint32_t value) {
+  _internal_set_type(value);
+  // @@protoc_insertion_point(field_set:WatchpointPacket.Type)
+}
+
+// uint32 Length = 5;
+inline void WatchpointPacket::clear_length() {
+  length_ = 0u;
+}
+inline uint32_t WatchpointPacket::_internal_length() const {
+  return length_;
+}
+inline uint32_t WatchpointPacket::length() const {
+  // @@protoc_insertion_point(field_get:WatchpointPacket.Length)
+  return _internal_length();
+}
+inline void WatchpointPacket::_internal_set_length(uint32_t value) {
+  
+  length_ = value;
+}
+inline void WatchpointPacket::set_length(uint32_t value) {
+  _internal_set_length(value);
+  // @@protoc_insertion_point(field_set:WatchpointPacket.Length)
+}
+
+// -------------------------------------------------------------------
+
+// WatchpointListPacket
+
+// repeated .WatchpointPacket Watchpoints = 1;
+inline int WatchpointListPacket::_internal_watchpoints_size() const {
+  return watchpoints_.size();
+}
+inline int WatchpointListPacket::watchpoints_size() const {
+  return _internal_watchpoints_size();
+}
+inline void WatchpointListPacket::clear_watchpoints() {
+  watchpoints_.Clear();
+}
+inline ::WatchpointPacket* WatchpointListPacket::mutable_watchpoints(int index) {
+  // @@protoc_insertion_point(field_mutable:WatchpointListPacket.Watchpoints)
+  return watchpoints_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchpointPacket >*
+WatchpointListPacket::mutable_watchpoints() {
+  // @@protoc_insertion_point(field_mutable_list:WatchpointListPacket.Watchpoints)
+  return &watchpoints_;
+}
+inline const ::WatchpointPacket& WatchpointListPacket::_internal_watchpoints(int index) const {
+  return watchpoints_.Get(index);
+}
+inline const ::WatchpointPacket& WatchpointListPacket::watchpoints(int index) const {
+  // @@protoc_insertion_point(field_get:WatchpointListPacket.Watchpoints)
+  return _internal_watchpoints(index);
+}
+inline ::WatchpointPacket* WatchpointListPacket::_internal_add_watchpoints() {
+  return watchpoints_.Add();
+}
+inline ::WatchpointPacket* WatchpointListPacket::add_watchpoints() {
+  ::WatchpointPacket* _add = _internal_add_watchpoints();
+  // @@protoc_insertion_point(field_add:WatchpointListPacket.Watchpoints)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchpointPacket >&
+WatchpointListPacket::watchpoints() const {
+  // @@protoc_insertion_point(field_list:WatchpointListPacket.Watchpoints)
+  return watchpoints_;
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -5,7 +5,10 @@
 #include "PtraceDefs.h"
 #include "SignalDefs.h"
 #include <KernelInterface.h>
+#include <KernelExt.h>
 
+
+WatchpointData WatchData;
 std::mutex Debug::DebugMtx;
 bool Debug::IsDebugging;
 int Debug::CurrentPID;
@@ -43,33 +46,33 @@ void Debug::Attach(SceNetId sock)
 		Logger::Info("Attach(): Attempting to attach to %s (%d)\n", processName, pid);
 
 		// If we are currently debugging another process lets detach from it.
-		//if (!TryDetach(pid))
-		//{
-		//	Logger::Error("Attach(): TryDetach Failed. :(\n");
-		//	SendStatePacket(sock, false, "Try detach failed.");
-		//	return;
-		//}
-		//
-		//// Use ptrace to attach to begin debugging this pid.
-		//int res = ptrace(PT_ATTACH, pid, nullptr, 0);
-		//if (res != 0)
-		//{
-		//	Logger::Error("Attach(): ptrace(PT_ATTACH) failed with error %llX %s\n", __error(), strerror(errno));
-		//	SendStatePacket(sock, false, "Attach failed: %llX %s", __error(), strerror(errno));
-		//	return;
-		//}
-		//
-		//// Wait till the process haults.
-		//waitpid(pid, NULL, 0);
-		//
-		//// Attaching by default will stop execution of the remote process. Lets continue it now.
-		//res = ptrace(PT_CONTINUE, pid, (void*)1, 0);
-		//if (res != 0)
-		//{
-		//	Logger::Error("Attach(): ptrace(PT_CONTINUE) failed with error %llX %s\n", __error(), strerror(errno));
-		//	SendStatePacket(sock, false, "Continue failed: %llX %s", __error(), strerror(errno));
-		//	return;
-		//}
+		if (!TryDetach(pid))
+		{
+			Logger::Error("Attach(): TryDetach Failed. :(\n");
+			SendStatePacket(sock, false, "Try detach failed.");
+			return;
+		}
+		
+		// Use ptrace to attach to begin debugging this pid.
+		int res = ptrace(PT_ATTACH, pid, nullptr, 0);
+		if (res != 0)
+		{
+			Logger::Error("Attach(): ptrace(PT_ATTACH) failed with error %llX %s\n", __error(), strerror(errno));
+			SendStatePacket(sock, false, "Attach failed: %llX %s", __error(), strerror(errno));
+			return;
+		}
+		
+		// Wait till the process haults.
+		waitpid(pid, NULL, 0);
+		
+		// Attaching by default will stop execution of the remote process. Lets continue it now.
+		res = ptrace(PT_CONTINUE, pid, (void*)1, 0);
+		if (res != 0)
+		{
+			Logger::Error("Attach(): ptrace(PT_CONTINUE) failed with error %llX %s\n", __error(), strerror(errno));
+			SendStatePacket(sock, false, "Continue failed: %llX %s", __error(), strerror(errno));
+			return;
+		}
 
 		// Set current debugging state.
 		IsDebugging = true;
@@ -118,7 +121,7 @@ void Debug::Detach(SceNetId sock)
 		unmount(va("/mnt/sandbox/%s_000/data", appInfo.TitleId).c_str(), MNT_FORCE);
 		unmount(va("/mnt/sandbox/%s_000/system", appInfo.TitleId).c_str(), MNT_FORCE);
 
-		//if (TryDetach(CurrentPID))
+		if (TryDetach(CurrentPID))
 		{
 			// Reset vars.
 			IsDebugging = false;
@@ -127,11 +130,11 @@ void Debug::Detach(SceNetId sock)
 			Events::SendEvent(Events::EVENT_DETACH);
 			SendStatePacket(sock, true, "");
 		}
-		//else
-		//{
-		//	Logger::Error("Failed to detach from %d\n", CurrentPID);
-		//	SendStatePacket(sock, false, "Failed to detach from %d", CurrentPID);
-		//}
+		else
+		{
+			Logger::Error("Failed to detach from %d\n", CurrentPID);
+			SendStatePacket(sock, false, "Failed to detach from %d", CurrentPID);
+		}
 	}
 }
 
@@ -313,4 +316,460 @@ bool Debug::TryDetach(int pid)
 	DebuggeeMonitor.reset();
 
 	return true;
+}
+
+bool Debug::ParseEvent(SceNetId sock, int* pid, int* event)
+{
+	if (!Sockets::RecvInt(sock, pid))
+	{
+		Logger::Error("ParseDebugTrace(): Failed to recieve the pid\n");
+		SendStatePacket(sock, false, "Failed to recieve the pid.");
+		return false;
+	}
+
+	//int event = 0;
+	//if (!Sockets::RecvInt(sock, event))
+	//{
+	//	Logger::Error("ParseDebugTrace(): Failed to parse event id\n");
+	//	SendStatePacket(sock, false, "Failed to recieve the event id.");
+	//	return false;
+	//}
+
+	return true;
+}
+
+bool Debug::SuspendDebug()
+{
+	int res = ptrace(PT_CONTINUE, CurrentPID, (void*)1, SIGSTOP);
+	if (res != 0)
+	{
+		Logger::Error("Debug::Stop(): ptrace(PT_CONTINUE) SIGSTOP failed with error %llX %s\n", __error(), strerror(errno));
+		return false;
+	}
+
+	int status;
+	while (wait4(CurrentPID, &status, WNOHANG, nullptr) != CurrentPID)
+		continue;
+
+	return true;
+}
+
+void Debug::ResumeDebug()
+{
+	int res = ptrace(PT_CONTINUE, CurrentPID, (void*)1, 0);
+	if (res != 0)
+	{
+		Logger::Error("Debug::Resume(): ptrace(PT_CONTINUE) SIGCONTINUE failed with error %llX %s\n", __error(), strerror(errno));
+		return;
+	}
+}
+
+void Debug::Stop(SceNetId sock)
+{
+	int pid, event;
+	bool r = ParseEvent(sock, &pid, &event);
+	if (!r)
+		return;
+	
+	int res = ptrace(PT_CONTINUE, pid, (void*)1, SIGSTOP);
+	if (res != 0)
+	{
+		Logger::Error("Stop(): ptrace(PT_CONTINUE) SIGSTOP failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "Continue failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	SendStatePacket(sock, true, "");
+}
+
+void Debug::Kill(SceNetId sock)
+{
+	int pid, event;
+	bool r = ParseEvent(sock, &pid, &event);
+	if (!r)
+		return;
+
+	int res = ptrace(PT_CONTINUE, pid, (void*)1, SIGKILL);
+	if (res != 0)
+	{
+		Logger::Error("Kill(): ptrace(PT_CONTINUE) SIGKILL failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "Continue failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	SendStatePacket(sock, true, "");
+}
+
+void Debug::Resume(SceNetId sock)
+{
+	int pid, event;
+	bool r = ParseEvent(sock, &pid, &event);
+	if (!r)
+		return;
+
+	int res = ptrace(PT_CONTINUE, pid, (void*)1, 0);
+	if (res != 0)
+	{
+		Logger::Error("Resume(): ptrace(PT_CONTINUE) SIGCONTINUE failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "Continue failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	SendStatePacket(sock, true, "");
+}
+
+void Debug::GetThreadInfo(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int threadId;
+	Sockets::RecvInt(sock, &threadId);
+
+	std::unique_ptr<OrbisThreadInfo> threadInfo = std::make_unique<OrbisThreadInfo>();
+	threadInfo->Handle = threadId;
+
+	char threadName[0x40];
+	if (sceKernelGetThreadName(threadId, threadName) == 0)
+	{
+		strcpy(threadInfo->Name, threadName);
+	}
+
+	ThreadInfoPacket packet;
+	packet.set_name(threadInfo->Name);
+	packet.set_tid(threadId);
+
+	SendProtobufPacket(sock, packet);
+}
+
+
+void Debug::GetThreadRegisters(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int threadId;
+	Sockets::RecvInt(sock, &threadId);
+
+	Registers regs;
+	int res = ptrace(PT_GETREGS, threadId, &regs, 0);
+	if (res == -1 && errno)
+	{
+		Logger::Error("GetThreadRegisters(): ptrace(PT_GETREGS) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "GetRegisters failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	Sockets::SendLargeData(sock, reinterpret_cast<unsigned char*>(&regs), sizeof(Registers));
+
+	SendStatePacket(sock, true, "");
+}
+
+void Debug::SetThreadRegisters(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int threadId;
+	Sockets::RecvInt(sock, &threadId);
+
+	if (threadId == 0)
+	{
+		Logger::Error("SetThreadRegisters(): Thread id was null");
+		SendStatePacket(sock, false, "Thread id was null");
+		return;
+	}
+
+	Registers regs;
+	Sockets::RecvLargeData(sock, reinterpret_cast<unsigned char*>(&regs), sizeof(Registers));
+
+	int res = ptrace(PT_SETREGS, threadId, &regs, 0);
+	if (res == -1 && errno)
+	{
+		Logger::Error("SetThreadRegisters(): ptrace(PT_SETREGS) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "SetRegisters failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	SendStatePacket(sock, true, "");
+}
+
+void Debug::GetThreadList(SceNetId sock)
+{
+	ThreadListPacket packet;
+
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int pid = Debug::CurrentPID;
+
+	int rlwps = ptrace(PT_GETNUMLWPS, pid, nullptr, 0);
+	if (rlwps == -1)
+	{
+		Logger::Error("GetThreadList(): ptrace(PT_GETNUMLWPS) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "GETNUMLWPS failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	std::unique_ptr<uint32_t[]> lwpids = std::make_unique<uint32_t[]>(rlwps);
+
+	int res = ptrace(PT_GETLWPLIST, pid, lwpids.get(), rlwps);
+	if (res == -1)
+	{
+		Logger::Error("GetThreadList(): ptrace(PT_GETLWPLIST) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "PT_GETLWPLIST failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	std::vector<ThreadInfoPacket> vectorList;
+	
+	for (int i = 0; i < rlwps; i++)
+	{
+		char name[256];
+		sceKernelGetThreadName(lwpids[i], name);
+
+		ThreadInfoPacket threadInfo;
+		threadInfo.set_tid(lwpids[i]);
+		threadInfo.set_name(name);
+
+		vectorList.push_back(threadInfo);
+	}
+	*packet.mutable_threads() = { vectorList.begin(), vectorList.end() };
+
+	SendProtobufPacket(sock, packet);
+}
+
+void Debug::StopThread(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int threadId;
+	Sockets::RecvInt(sock, &threadId);
+
+	if (threadId == 0)
+	{
+		Logger::Error("StopThread(): Thread id was null");
+		SendStatePacket(sock, false, "Thread id was null");
+		return;
+	}
+
+	int r = ptrace(PT_SUSPEND, threadId, nullptr, 0);
+	if (r == -1)
+	{
+		Logger::Error("StopThread(): ptrace(PT_SUSPEND) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "PT_SUSPEND failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	SendStatePacket(sock, true, "");
+}
+
+void Debug::ResumeThread(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int threadId;
+	Sockets::RecvInt(sock, &threadId);
+
+	if (threadId == 0)
+	{
+		Logger::Error("ResumeThread(): Thread id was null");
+		SendStatePacket(sock, false, "Thread id was null");
+		return;
+	}
+
+	int r = ptrace(PT_RESUME, threadId, nullptr, 0);
+	if (r == -1)
+	{
+		Logger::Error("ResumeThread(): ptrace(PT_RESUME) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "PT_RESUME failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	SendStatePacket(sock, true, "");
+}
+
+void Debug::GetWatchpointList(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	auto CurrentWatchpoints = DebuggeeMonitor->Watchpoints;
+
+	WatchpointListPacket packet;
+
+	std::vector<WatchpointPacket> watchpoints(CurrentWatchpoints.size());
+
+	for (int i = 0; i < CurrentWatchpoints.size(); i++)
+	{
+		watchpoints[i].set_enabled(CurrentWatchpoints[i]->Enabled);
+		watchpoints[i].set_address(CurrentWatchpoints[i]->Address);
+		watchpoints[i].set_type(CurrentWatchpoints[i]->Type);
+		watchpoints[i].set_length(CurrentWatchpoints[i]->Length);
+	}
+
+	*packet.mutable_watchpoints() = { watchpoints.begin(), watchpoints.end() };
+
+	SendProtobufPacket(sock, packet);
+}
+
+void Debug::SetWatchpoint(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int pid = CurrentPID;
+
+	WatchpointPacket watchpoint;
+	if (!RecieveProtoBuf(sock, &watchpoint))
+	{
+		Logger::Error("SetWatchpoint(): failed with recieve watchpoint data\n");
+		SendStatePacket(sock, false, "Failed to recieve watchpoint data");
+		return;
+	}
+
+	for (int i = 0; i < DebuggeeMonitor->Watchpoints.size(); i++)
+	{
+		Watchpoint* current = DebuggeeMonitor->Watchpoints[i].get();
+
+		if (watchpoint.address() == current->Address)
+		{
+			Logger::Error("SetWatchpoint(): matching watchpoint is already set\n");
+			SendStatePacket(sock, false, "Failed to set watchpoint (already set)");
+			return;
+		}
+	}
+
+	Logger::Info("Watchpoint:\n");
+	Logger::Info("\tIndex: %i\n", watchpoint.index());
+	Logger::Info("\tEnabled: %s\n", watchpoint.enabled() ? "True" : "False");
+	Logger::Info("\tAddress: 0x%llX\n", watchpoint.address());
+	Logger::Info("\tType: %i\n", watchpoint.type());
+	Logger::Info("\tLength: %i\n", watchpoint.length());
+
+	int rlwps = ptrace(PT_GETNUMLWPS, pid, nullptr, 0);
+	if (rlwps == -1)
+	{
+		Logger::Error("SetWatchpoint(): ptrace(PT_GETNUMLWPS) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "GETNUMLWPS failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	//uint32_t* lwpids = (uint32_t*)malloc(sizeof(uint32_t) * rlwps);
+	std::unique_ptr<uint32_t[]> lwpids = std::make_unique<uint32_t[]>(rlwps);
+
+	int res = ptrace(PT_GETLWPLIST, pid, lwpids.get(), rlwps);
+	if (res == -1)
+	{
+		Logger::Error("SetWatchpoint(): ptrace(PT_GETLWPLIST) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "PT_GETLWPLIST failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	WatchpointData* watchData = &WatchData;
+	memset(watchData, 0, sizeof(WatchpointData));
+
+	watchData->dr[7] &= ~DR7_MASK(watchpoint.index());
+
+	watchData->dr[watchpoint.index()] = watchpoint.address();
+	watchData->dr[7] |= DR7_SET(watchpoint.index(), watchpoint.length(), watchpoint.type(), DR7_LOCAL_ENABLE | DR7_GLOBAL_ENABLE);
+
+	Logger::Info("Watchdata:\n");
+	hexdump(watchData, sizeof(WatchpointData));
+
+	for (int i = 0; i < rlwps; i++)
+	{
+		res = ptrace(PT_SETDBREGS, lwpids[i], watchData, 0);
+		if (res == -1 && errno)
+		{
+			Logger::Error("SetWatchpoint(): [lwpid][%i] ptrace(PT_SETDBREGS) failed with error %llX %s\n", lwpids[i], __error(), strerror(errno));
+			SendStatePacket(sock, false, "PT_SETDBREGS failed: %llX %s", __error(), strerror(errno));
+			return;
+		}
+	}
+
+	DebuggeeMonitor->Watchpoints.push_back(std::make_shared<Watchpoint>(watchpoint.index(), watchpoint.enabled(), watchpoint.address(), (WatchpointType)watchpoint.type(), (WatchpointLength)watchpoint.length()));
+
+	Logger::Info("Watchpoint++ ref count: %i\n", DebuggeeMonitor->Watchpoints.size());
+
+	SendStatePacket(sock, true, "");
+
+	Logger::Success("Watchpoint set\n");
+}
+
+void Debug::RemoveWatchpoint(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int pid = CurrentPID;
+
+	WatchpointPacket watchpoint;
+	if (!RecieveProtoBuf(sock, &watchpoint))
+	{
+		Logger::Error("RemoveWatchpoint(): failed with recieve watchpoint data\n");
+		SendStatePacket(sock, false, "Failed to recieve watchpoint data");
+	}
+
+	for (int i = 0; i < DebuggeeMonitor->Watchpoints.size(); i++)
+	{
+		Watchpoint* current = DebuggeeMonitor->Watchpoints[i].get();
+
+		Logger::Info("[remove] Watchpoint:\n");
+		Logger::Info("\tIndex: %i\n", current->Index);
+		Logger::Info("\tEnabled: %s\n", current->Enabled ? "True" : "False");
+		Logger::Info("\tAddress: 0x%llX\n", current->Address);
+		Logger::Info("\tType: %i\n", current->Type);
+		Logger::Info("\tLength: %i\n", current->Length);
+
+		if (watchpoint.address() == current->Address)
+		{
+			int rlwps = ptrace(PT_GETNUMLWPS, pid, nullptr, 0);
+			if (rlwps == -1)
+			{
+				Logger::Error("SetWatchpoint(): ptrace(PT_GETNUMLWPS) failed with error %llX %s\n", __error(), strerror(errno));
+				SendStatePacket(sock, false, "GETNUMLWPS failed: %llX %s", __error(), strerror(errno));
+				return;
+			}
+
+			std::unique_ptr<uint32_t[]> lwpids = std::make_unique<uint32_t[]>(rlwps);
+
+			int res = ptrace(PT_GETLWPLIST, pid, lwpids.get(), rlwps);
+			if (res == -1)
+			{
+				Logger::Error("SetWatchpoint(): ptrace(PT_GETLWPLIST) failed with error %llX %s\n", __error(), strerror(errno));
+				SendStatePacket(sock, false, "PT_GETLWPLIST failed: %llX %s", __error(), strerror(errno));
+				return;
+			}
+
+			WatchpointData* watchData = &WatchData;
+
+			watchData->dr[7] &= ~DR7_MASK(watchpoint.index());
+
+			watchData->dr[watchpoint.index()] = 0;
+			watchData->dr[7] |= DR7_SET(watchpoint.index(), 0, 0, DR7_DISABLE);
+
+			hexdump(watchData, sizeof(WatchpointData));
+
+			for (int i = 0; i < rlwps; i++)
+			{
+				res = ptrace(PT_SETDBREGS, pid, watchData, 0);
+				if (res == -1 && errno)
+				{
+					Logger::Error("RemoveWatchpoint(): [lwpid][%i] ptrace(PT_SETDBREGS) failed with error %llX %s\n", lwpids[i], __error(), strerror(errno));
+					SendStatePacket(sock, false, "PT_SETDBREGS failed: %llX %s", __error(), strerror(errno));
+					return;
+				}
+			}
+
+			DebuggeeMonitor->Watchpoints.erase(DebuggeeMonitor->Watchpoints.begin() + i);
+			Logger::Info("Watchpoint-- ref count: %i\n", DebuggeeMonitor->Watchpoints.size());
+
+			Logger::Success("Watchpoint removed\n");
+		}
+	}
+
+	SendStatePacket(sock, true, "");
 }

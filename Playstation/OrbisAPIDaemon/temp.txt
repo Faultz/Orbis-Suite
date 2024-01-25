@@ -1,0 +1,4 @@
+open 1.1.0.14 1337
+cd "/system/vsh/app/ORBS30000/"
+send C:\Users\Faultz\Documents\GitHub\Orbis-Suite\Playstation\build\pkg\Daemons\ORBS30000\eboot.bin
+quit

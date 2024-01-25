@@ -1,13 +1,33 @@
 ﻿using OrbisLib2.Common.API;
 using OrbisLib2.Common.Helpers;
+using System;
 using System.ComponentModel;
 using System.Net.Sockets;
+using System.Security.Cryptography;
+using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
+using static SQLite.SQLite3;
 
 namespace OrbisLib2.Targets
 {
+    public enum WatchpointLength : uint
+    {
+        DR7_BYTE = 0,
+        DR7_SHORT = 1,
+        DR7_INT = 3,
+        DR7_ULONG = 2,
+    };
+
+    public enum WatchpointType : uint
+    {
+        DR7_EXEC = 0x0,
+        DR7_WRITE = 0x1,
+        DR7_RW = 0x3
+    };
+
     public record LibraryInfo(long Handle, string Path, ulong MapBase, ulong TextSize, ulong MapSize, ulong DataBase, ulong dataSize);
+    public record PageInfo(string Name, ulong Start, ulong End, ulong Offset, ulong Size, uint Prot);
 
     public class Debug
     {
@@ -29,6 +49,109 @@ namespace OrbisLib2.Targets
                 return false;
 
             return true;
+        }
+
+        public async Task<ResultState> Stop(int pid)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgBreak, async (Socket Sock) =>
+            {
+                await Sock.SendInt32Async(pid);
+
+                return new ResultState { Succeeded = true };
+            });
+        }
+        public async Task<ResultState> Kill(int pid)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgKill, async (Socket Sock) =>
+            {
+                await Sock.SendInt32Async(pid);
+
+                return new ResultState { Succeeded = true };
+            });
+        }
+        public async Task<ResultState> Resume(int pid)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgResume, async (Socket Sock) =>
+            {
+                await Sock.SendInt32Async(pid);
+
+                return new ResultState { Succeeded = true };
+            });
+        }
+
+        public async Task<ResultState> SetWatchpoint(int index, ulong address, WatchpointLength length, WatchpointType type)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgWatchpointSet, async (Socket Sock) =>
+            {
+                var result = await API.SendNextPacket(Sock, new WatchpointPacket { Index = (uint)index, Enabled = true, Address = address,  Length = (uint)length, Type = (uint)type });
+
+                return new ResultState { Succeeded = true };
+            });
+        }
+
+        public async Task<ResultState> RemoveWatchpoint(int index, ulong address)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgWatchpointRemove, async (Socket Sock) =>
+            {
+                var result = await API.SendNextPacket(Sock, new WatchpointPacket { Index = (uint)index, Enabled = false, Address = address, Length = 0, Type = 0 });
+
+                return new ResultState { Succeeded = true };
+            });
+        }
+        public async Task<(ResultState, List<ThreadInfoPacket>)> GetThreadList()
+        {
+            var tempThreadList = new List<ThreadInfoPacket>();
+
+            var result = await API.SendCommand(Target, 1000, APICommand.ApiDbgThreadList, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var rawPacket = await Sock.ReceiveSizeAsync();
+                    var Packet = ThreadListPacket.Parser.ParseFrom(rawPacket);
+
+                    if (Packet.Threads.Count == 0)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"Packet returned with a empty thread count: {Packet.Threads.Count}" };
+
+                    foreach(var thread in Packet.Threads)
+                    {
+                        ThreadInfoPacket threadInfo = new ThreadInfoPacket { TID = thread.TID, Name = thread.Name };
+                        tempThreadList.Add(threadInfo);
+                    }
+
+                    return new ResultState { Succeeded = true };
+                }
+            });
+
+            return (result, tempThreadList);
+        }
+
+        public async Task<(ResultState, string)> GetThreadName(int lwpid)
+        {
+            string threadName = "";
+
+            var result = await API.SendCommand(Target, 1000, APICommand.ApiExtGetThreadInfo, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    await Sock.SendInt32Async(lwpid);
+
+                    var rawPacket = await Sock.ReceiveSizeAsync();
+                    var Packet = ThreadInfoPacket.Parser.ParseFrom(rawPacket);
+
+                    if (Packet.Name.Length == 0)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"Thread name is empty" };
+
+                    threadName = Packet.Name;
+
+                    return new ResultState { Succeeded = true };
+                }
+            });
+
+            return (result, threadName);
         }
 
         public async Task<ResultState> Attach(int pid)
@@ -162,6 +285,30 @@ namespace OrbisLib2.Targets
             return (result, tempLibraryList);
         }
 
+        public async Task<(ResultState, List<PageInfo>)> GetPages()
+        {
+            var tempLibraryList = new List<PageInfo>();
+
+            var result = await API.SendCommand(Target, 400, APICommand.ApiExtGetPages, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var rawPacket = await Sock.ReceiveSizeAsync();
+                    var Packet = PagesListPacket.Parser.ParseFrom(rawPacket);
+
+                    foreach (var page in Packet.Pages)
+                    {
+                        tempLibraryList.Add(new PageInfo(page.Name, page.Start, page.End, page.Offset, page.Size, page.Prot));
+                    }
+
+                    return new ResultState { Succeeded = true };
+                }
+            });
+
+            return (result, tempLibraryList);
+        }
 
         public async Task<(ResultState, byte[])> ReadMemory(ulong address, ulong length)
         {

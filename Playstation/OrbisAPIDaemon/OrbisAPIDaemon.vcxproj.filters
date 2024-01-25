@@ -100,9 +100,6 @@
     <ClCompile Include="API.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
-    <ClCompile Include="Events.cpp">
-      <Filter>Source Files\API</Filter>
-    </ClCompile>
     <ClCompile Include="SystemMonitor.cpp">
       <Filter>Source Files\API</Filter>
     </ClCompile>
@@ -129,6 +126,9 @@
     </ClCompile>
     <ClCompile Include="APIPackets.pb.cc">
       <Filter>Source Files\API\Proto</Filter>
+    </ClCompile>
+    <ClCompile Include="Events.cpp">
+      <Filter>Source Files\API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

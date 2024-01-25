@@ -82,6 +82,7 @@ enum APICommand
 	API_TARGET_DELETE_FILE = 62;
 
 	API_EXT_GET_PAGES = 63;
+	API_EXT_GET_THREAD_INFO = 64;
 }
 
 enum AppState
@@ -261,4 +262,29 @@ message PagesListPacket
 message FilePacket
 {
 	string FilePath = 1;
+}
+
+message ThreadInfoPacket
+{
+	uint32 TID = 1;
+	string Name = 2;
+}
+
+message ThreadListPacket
+{
+	repeated ThreadInfoPacket Threads = 1;
+}
+
+message WatchpointPacket
+{
+	uint32 Index = 1;
+	bool Enabled = 2;
+	uint64 Address = 3;
+	uint32 Type = 4;
+	uint32 Length = 5;
+}
+
+message WatchpointListPacket
+{
+	repeated WatchpointPacket Watchpoints = 1;
 }
