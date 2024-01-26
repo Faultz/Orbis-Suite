@@ -420,7 +420,7 @@ void Debug::Resume(SceNetId sock)
 
 void Debug::GetThreadInfo(SceNetId sock)
 {
-	if (!Debug::CheckDebug(sock))
+	if (!CheckDebug(sock))
 		return;
 
 	int threadId;
@@ -445,7 +445,7 @@ void Debug::GetThreadInfo(SceNetId sock)
 
 void Debug::GetThreadRegisters(SceNetId sock)
 {
-	if (!Debug::CheckDebug(sock))
+	if (!CheckDebug(sock))
 		return;
 
 	int threadId;
