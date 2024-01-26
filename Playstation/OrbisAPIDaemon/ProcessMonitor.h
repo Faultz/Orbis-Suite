@@ -4,15 +4,15 @@ enum WatchpointLength : uint32_t
 {
 	DR7_BYTE = 0,
 	DR7_SHORT = 1,
-	DR7_INT = 2,
-	DR7_ULONG = 3,
+	DR7_INT = 3,
+	DR7_ULONG = 2,
 };
 
 enum WatchpointType : uint32_t
 {
-	DR7_EXEC = 0x0,
-	DR7_WRITE = 0x1,
-	DR7_RW = 0x2
+	DR7_EXEC = 0,
+	DR7_WRITE = 1,
+	DR7_RW = 3
 };
 
 struct Watchpoint

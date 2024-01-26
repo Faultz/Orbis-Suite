@@ -56,17 +56,30 @@ ProcessMonitor::~ProcessMonitor()
 void WriteRegister(std::string regName, uint64_t reg, std::unique_ptr<OrbisProcessPage[]>& pages, int count)
 {
 	std::string libraryName = "";
+	int protection = 0;
 	for (int i = 0; i < count; i++)
 	{
-		if (reg <= pages[i].Start && reg >= pages[i].End) {
+		if (reg >= pages[i].Start && reg <= pages[i].End) {
 			// The register is in the range of this page
 			libraryName = pages[i].Name;
-			printf("library: %s\n", pages[i].Name);
-			break;  // No need to check further pages
+			protection = pages[i].Prot;
 		}
 	}
+	printf("%-14s 0x%016lX - %-24s", regName.data(), (unsigned long long)reg, libraryName.data());
 
-	printf("%-24s: 0x%llX - %s\n", regName.data(), (unsigned long long)reg, libraryName.data());
+	if (protection != 0)
+	{
+		scePthreadAttrGetstackaddr
+		printf("Protection: ");
+		if (protection & SCE_KERNEL_PROT_CPU_READ)
+			printf("Read ");
+		if (protection & SCE_KERNEL_PROT_CPU_RW)
+			printf("Write ");
+		if (protection & SCE_KERNEL_PROT_CPU_EXEC)
+			printf("Execute");
+	}
+
+	printf("\n");
 }
 
 void ProcessException(int lwpid, Registers registers)
