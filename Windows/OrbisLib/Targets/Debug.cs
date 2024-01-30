@@ -28,7 +28,7 @@ namespace OrbisLib2.Targets
 
     public record LibraryInfo(long Handle, string Path, ulong MapBase, ulong TextSize, ulong MapSize, ulong DataBase, ulong dataSize);
     public record PageInfo(string Name, ulong Start, ulong End, ulong Offset, ulong Size, uint Prot);
-
+    public record ObjectInfo(string Name);
     public class Debug
     {
         private Target Target;
@@ -79,6 +79,26 @@ namespace OrbisLib2.Targets
             });
         }
 
+        public async Task<ResultState> SetBreakpoint(int index, ulong address)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgBreakpointSet, async (Socket Sock) =>
+            {
+                var result = await API.SendNextPacket(Sock, new BreakpointPacket { Index = (uint)index, Enabled = true, Address = address });
+
+                return new ResultState { Succeeded = true };
+            });
+        }
+
+        public async Task<ResultState> RemoveBreakpoint(int index)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgBreakpointRemove, async (Socket Sock) =>
+            {
+                var result = await API.SendNextPacket(Sock, new BreakpointPacket { Index = (uint)index, Enabled = true, Address = 0 });
+
+                return new ResultState { Succeeded = true };
+            });
+        }
+
         public async Task<ResultState> SetWatchpoint(int index, ulong address, WatchpointLength length, WatchpointType type)
         {
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgWatchpointSet, async (Socket Sock) =>
@@ -89,15 +109,27 @@ namespace OrbisLib2.Targets
             });
         }
 
-        public async Task<ResultState> RemoveWatchpoint(int index, ulong address)
+        public async Task<ResultState> RemoveWatchpoint(int index)
         {
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgWatchpointRemove, async (Socket Sock) =>
             {
-                var result = await API.SendNextPacket(Sock, new WatchpointPacket { Index = (uint)index, Enabled = false, Address = address, Length = 0, Type = 0 });
+                var result = await API.SendNextPacket(Sock, new WatchpointPacket { Index = (uint)index, Enabled = true, Address = 0, Length = 0, Type = 0 });
 
                 return new ResultState { Succeeded = true };
             });
         }
+
+        public async Task<ResultState> SetProtection(ulong address, ulong size, int prot)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiExtSetProcProt, async (Socket Sock) =>
+            {
+                var result = await API.SendNextPacket(Sock, new SetProcessProtPacket { Address = address,  Size = size, Prot = prot, });
+
+                return new ResultState { Succeeded = true };
+            });
+        }
+
+
         public async Task<(ResultState, List<ThreadInfoPacket>)> GetThreadList()
         {
             var tempThreadList = new List<ThreadInfoPacket>();
@@ -301,6 +333,31 @@ namespace OrbisLib2.Targets
                     foreach (var page in Packet.Pages)
                     {
                         tempLibraryList.Add(new PageInfo(page.Name, page.Start, page.End, page.Offset, page.Size, page.Prot));
+                    }
+
+                    return new ResultState { Succeeded = true };
+                }
+            });
+
+            return (result, tempLibraryList);
+        }
+
+        public async Task<(ResultState, List<ObjectInfo>)> GetNamedObjects()
+        {
+            var tempLibraryList = new List<ObjectInfo>();
+
+            var result = await API.SendCommand(Target, 400, APICommand.ApiExtGetNamedObjects, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var rawPacket = await Sock.ReceiveSizeAsync();
+                    var Packet = NamedObjectListPacket.Parser.ParseFrom(rawPacket);
+
+                    foreach (var obj in Packet.Objects)
+                    {
+                        tempLibraryList.Add(new ObjectInfo(obj.Name));
                     }
 
                     return new ResultState { Succeeded = true };

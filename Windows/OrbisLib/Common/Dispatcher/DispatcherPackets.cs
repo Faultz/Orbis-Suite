@@ -1,4 +1,5 @@
 ﻿using OrbisLib2.Common.Database.Types;
+using Google.Protobuf;
 
 namespace OrbisLib2.Common.Dispatcher
 {
@@ -51,7 +52,7 @@ namespace OrbisLib2.Common.Dispatcher
     {
         public int Reason { get; set; }
 
-        //Regiseters
+        public DebuggerInterruptPacket Interrupt { get; set; }
     }
 
     [Serializable]
