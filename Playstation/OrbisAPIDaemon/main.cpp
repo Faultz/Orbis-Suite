@@ -9,7 +9,7 @@
 int main(int argc, char** arg)
 {
 	// Set up the Logger.
-	Logger::Init(true, Logger::LoggingLevels::LogLevelAll);
+	Logger::Init(false, Logger::LoggingLevels::LogLevelAll);
 
 	// Jailbreak our current process.
 	if (!Jailbreak())

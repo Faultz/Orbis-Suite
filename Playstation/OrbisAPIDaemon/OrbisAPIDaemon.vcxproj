@@ -78,6 +78,7 @@ del $(OutputPath)$(ProjectName).elf
       <CppExceptions Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</CppExceptions>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">true</MultiProcessorCompilation>
       <ProcessorNumber Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">32</ProcessorNumber>
+      <CppLanguageStd Condition="'$(Configuration)|$(Platform)'=='Debug|ORBIS'">Cpp17</CppLanguageStd>
     </ClCompile>
     <ClCompile>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">NDEBUG;%(PreprocessorDefinitions);</PreprocessorDefinitions>

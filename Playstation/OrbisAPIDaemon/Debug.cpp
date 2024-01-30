@@ -7,8 +7,8 @@
 #include <KernelInterface.h>
 #include <KernelExt.h>
 
-
 WatchpointData WatchData;
+
 std::mutex Debug::DebugMtx;
 bool Debug::IsDebugging;
 int Debug::CurrentPID;
@@ -318,26 +318,6 @@ bool Debug::TryDetach(int pid)
 	return true;
 }
 
-bool Debug::ParseEvent(SceNetId sock, int* pid, int* event)
-{
-	if (!Sockets::RecvInt(sock, pid))
-	{
-		Logger::Error("ParseDebugTrace(): Failed to recieve the pid\n");
-		SendStatePacket(sock, false, "Failed to recieve the pid.");
-		return false;
-	}
-
-	//int event = 0;
-	//if (!Sockets::RecvInt(sock, event))
-	//{
-	//	Logger::Error("ParseDebugTrace(): Failed to parse event id\n");
-	//	SendStatePacket(sock, false, "Failed to recieve the event id.");
-	//	return false;
-	//}
-
-	return true;
-}
-
 bool Debug::SuspendDebug()
 {
 	int res = ptrace(PT_CONTINUE, CurrentPID, (void*)1, SIGSTOP);
@@ -366,10 +346,13 @@ void Debug::ResumeDebug()
 
 void Debug::Stop(SceNetId sock)
 {
-	int pid, event;
-	bool r = ParseEvent(sock, &pid, &event);
-	if (!r)
+	int pid;
+	if (!Sockets::RecvInt(sock, &pid))
+	{
+		Logger::Error("ParseDebugTrace(): Failed to recieve the pid\n");
+		SendStatePacket(sock, false, "Failed to recieve the pid.");
 		return;
+	}
 	
 	int res = ptrace(PT_CONTINUE, pid, (void*)1, SIGSTOP);
 	if (res != 0)
@@ -384,10 +367,13 @@ void Debug::Stop(SceNetId sock)
 
 void Debug::Kill(SceNetId sock)
 {
-	int pid, event;
-	bool r = ParseEvent(sock, &pid, &event);
-	if (!r)
+	int pid;
+	if (!Sockets::RecvInt(sock, &pid))
+	{
+		Logger::Error("ParseDebugTrace(): Failed to recieve the pid\n");
+		SendStatePacket(sock, false, "Failed to recieve the pid.");
 		return;
+	}
 
 	int res = ptrace(PT_CONTINUE, pid, (void*)1, SIGKILL);
 	if (res != 0)
@@ -402,10 +388,13 @@ void Debug::Kill(SceNetId sock)
 
 void Debug::Resume(SceNetId sock)
 {
-	int pid, event;
-	bool r = ParseEvent(sock, &pid, &event);
-	if (!r)
+	int pid;
+	if (!Sockets::RecvInt(sock, &pid))
+	{
+		Logger::Error("ParseDebugTrace(): Failed to recieve the pid\n");
+		SendStatePacket(sock, false, "Failed to recieve the pid.");
 		return;
+	}
 
 	int res = ptrace(PT_CONTINUE, pid, (void*)1, 0);
 	if (res != 0)
@@ -539,6 +528,22 @@ void Debug::GetThreadList(SceNetId sock)
 	SendProtobufPacket(sock, packet);
 }
 
+void Debug::SetSingleStep(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	int res = ptrace(PT_STEP, CurrentPID, (void*)1, 0);
+	if (res == -1 && errno)
+	{
+		Logger::Error("SetSingleStep(): ptrace(PT_STEP) failed with error %llX %s\n", __error(), strerror(errno));
+		SendStatePacket(sock, false, "PT_STEP failed: %llX %s", __error(), strerror(errno));
+		return;
+	}
+
+	SendStatePacket(sock, true, "");
+}
+
 void Debug::StopThread(SceNetId sock)
 {
 	if (!Debug::CheckDebug(sock))
@@ -604,6 +609,7 @@ void Debug::GetWatchpointList(SceNetId sock)
 
 	for (int i = 0; i < CurrentWatchpoints.size(); i++)
 	{
+		watchpoints[i].set_index(CurrentWatchpoints[i]->Index);
 		watchpoints[i].set_enabled(CurrentWatchpoints[i]->Enabled);
 		watchpoints[i].set_address(CurrentWatchpoints[i]->Address);
 		watchpoints[i].set_type(CurrentWatchpoints[i]->Type);
@@ -642,7 +648,7 @@ void Debug::SetWatchpoint(SceNetId sock)
 		}
 	}
 
-	Logger::Info("Watchpoint:\n");
+	Logger::Info("[add] Watchpoint:\n");
 	Logger::Info("\tIndex: %i\n", watchpoint.index());
 	Logger::Info("\tEnabled: %s\n", watchpoint.enabled() ? "True" : "False");
 	Logger::Info("\tAddress: 0x%llX\n", watchpoint.address());
@@ -657,7 +663,6 @@ void Debug::SetWatchpoint(SceNetId sock)
 		return;
 	}
 
-	//uint32_t* lwpids = (uint32_t*)malloc(sizeof(uint32_t) * rlwps);
 	std::unique_ptr<uint32_t[]> lwpids = std::make_unique<uint32_t[]>(rlwps);
 
 	int res = ptrace(PT_GETLWPLIST, pid, lwpids.get(), rlwps);
@@ -676,9 +681,6 @@ void Debug::SetWatchpoint(SceNetId sock)
 	watchData->dr[watchpoint.index()] = watchpoint.address();
 	watchData->dr[7] |= DR7_SET(watchpoint.index(), watchpoint.length(), watchpoint.type(), DR7_LOCAL_ENABLE | DR7_GLOBAL_ENABLE);
 
-	Logger::Info("Watchdata:\n");
-	hexdump(watchData, sizeof(WatchpointData));
-
 	for (int i = 0; i < rlwps; i++)
 	{
 		res = ptrace(PT_SETDBREGS, lwpids[i], watchData, 0);
@@ -692,11 +694,9 @@ void Debug::SetWatchpoint(SceNetId sock)
 
 	DebuggeeMonitor->Watchpoints.push_back(std::make_shared<Watchpoint>(watchpoint.index(), watchpoint.enabled(), watchpoint.address(), (WatchpointType)watchpoint.type(), (WatchpointLength)watchpoint.length()));
 
-	Logger::Info("Watchpoint++ ref count: %i\n", DebuggeeMonitor->Watchpoints.size());
+	Logger::Success("Watchpoint++ ref count: %i\n", DebuggeeMonitor->Watchpoints.size());
 
 	SendStatePacket(sock, true, "");
-
-	Logger::Success("Watchpoint set\n");
 }
 
 void Debug::RemoveWatchpoint(SceNetId sock)
@@ -715,17 +715,17 @@ void Debug::RemoveWatchpoint(SceNetId sock)
 
 	for (int i = 0; i < DebuggeeMonitor->Watchpoints.size(); i++)
 	{
-		Watchpoint* current = DebuggeeMonitor->Watchpoints[i].get();
+		auto current = DebuggeeMonitor->Watchpoints[i];
 
-		Logger::Info("[remove] Watchpoint:\n");
-		Logger::Info("\tIndex: %i\n", current->Index);
-		Logger::Info("\tEnabled: %s\n", current->Enabled ? "True" : "False");
-		Logger::Info("\tAddress: 0x%llX\n", current->Address);
-		Logger::Info("\tType: %i\n", current->Type);
-		Logger::Info("\tLength: %i\n", current->Length);
-
-		if (watchpoint.address() == current->Address)
+		if (watchpoint.index() == current->Index)
 		{
+			Logger::Info("[remove] Watchpoint:\n");
+			Logger::Info("\tIndex: %i\n", current->Index);
+			Logger::Info("\tEnabled: %s\n", current->Enabled ? "True" : "False");
+			Logger::Info("\tAddress: 0x%llX\n", current->Address);
+			Logger::Info("\tType: %i\n", current->Type);
+			Logger::Info("\tLength: %i\n", current->Length);
+
 			int rlwps = ptrace(PT_GETNUMLWPS, pid, nullptr, 0);
 			if (rlwps == -1)
 			{
@@ -751,11 +751,9 @@ void Debug::RemoveWatchpoint(SceNetId sock)
 			watchData->dr[watchpoint.index()] = 0;
 			watchData->dr[7] |= DR7_SET(watchpoint.index(), 0, 0, DR7_DISABLE);
 
-			hexdump(watchData, sizeof(WatchpointData));
-
 			for (int i = 0; i < rlwps; i++)
 			{
-				res = ptrace(PT_SETDBREGS, pid, watchData, 0);
+				res = ptrace(PT_SETDBREGS, lwpids[i], watchData, 0);
 				if (res == -1 && errno)
 				{
 					Logger::Error("RemoveWatchpoint(): [lwpid][%i] ptrace(PT_SETDBREGS) failed with error %llX %s\n", lwpids[i], __error(), strerror(errno));
@@ -765,11 +763,105 @@ void Debug::RemoveWatchpoint(SceNetId sock)
 			}
 
 			DebuggeeMonitor->Watchpoints.erase(DebuggeeMonitor->Watchpoints.begin() + i);
-			Logger::Info("Watchpoint-- ref count: %i\n", DebuggeeMonitor->Watchpoints.size());
-
-			Logger::Success("Watchpoint removed\n");
+			Logger::Success("Watchpoint-- ref count: %i\n", DebuggeeMonitor->Watchpoints.size());
 		}
 	}
+
+	SendStatePacket(sock, true, "");
+}
+
+void Debug::GetBreakpointList(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	auto CurrentBreakpoint = DebuggeeMonitor->Breakpoints;
+
+	BreakpointListPacket packet;
+
+	std::vector<BreakpointPacket> watchpoints(CurrentBreakpoint.size());
+
+	for (int i = 0; i < CurrentBreakpoint.size(); i++)
+	{
+		watchpoints[i].set_index(CurrentBreakpoint[i]->Index);
+		watchpoints[i].set_enabled(CurrentBreakpoint[i]->Enabled);
+		watchpoints[i].set_address(CurrentBreakpoint[i]->Address);
+	}
+
+	*packet.mutable_breakpoints() = { watchpoints.begin(), watchpoints.end() };
+
+	SendProtobufPacket(sock, packet);
+}
+
+void Debug::SetBreakpoint(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	BreakpointPacket breakpoint;
+	if (!RecieveProtoBuf(sock, &breakpoint))
+	{
+		Logger::Error("SetBreakpoint(): failed with recieve breakpoint data\n");
+		SendStatePacket(sock, false, "Failed to recieve watchpoint data");
+	}
+
+	int Index = breakpoint.index();
+	uint64_t Address = breakpoint.address();
+	bool Enabled = breakpoint.enabled();
+
+	uint8_t original;
+	ReadWriteMemory(CurrentPID, reinterpret_cast<void*>(Address), &original, sizeof(uint8_t), false);
+
+	uint8_t bp_inst = 0xCC;
+	ReadWriteMemory(CurrentPID, reinterpret_cast<void*>(Address), &bp_inst, sizeof(uint8_t), true);
+
+	Logger::Success("Set breakpoint at 0x%016llX\n", Address);
+
+	std::shared_ptr<Breakpoint> current = std::make_shared<Breakpoint>(Index, Enabled, Address, original);
+	DebuggeeMonitor->Breakpoints.push_back(current);
+}
+
+void Debug::RemoveBreakpoint(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+
+	BreakpointPacket breakpoint;
+	if (!RecieveProtoBuf(sock, &breakpoint))
+	{
+		Logger::Error("SetBreakpoint(): failed with recieve breakpoint data\n");
+		SendStatePacket(sock, false, "Failed to recieve watchpoint data");
+	}
+
+	auto Breakpoints = DebuggeeMonitor->Breakpoints;
+
+	for (int i = 0; i < Breakpoints.size(); i++)
+	{
+		auto current = Breakpoints[i];
+		if (current->IsSet(breakpoint))
+		{
+			ReadWriteMemory(CurrentPID, reinterpret_cast<void*>(current->Address), &current->Original, sizeof(uint8_t), true);
+
+			Logger::Info("Removing breakpoint at 0x%016llX\n", current->Address);
+
+			Breakpoints.erase(Breakpoints.begin() + i);
+		}
+	}
+}
+
+void Debug::SetProcessProt(SceNetId sock)
+{
+	if (!Debug::CheckDebug(sock))
+		return;
+	
+	SetProcessProtPacket protPacket;
+	if (!RecieveProtoBuf(sock, &protPacket))
+	{
+		Logger::Error("SetProcessProt(): failed with recieve prot packet\n");
+		SendStatePacket(sock, false, "Failed to recieve prot packet");
+	}
+
+	SetProcessProtect(CurrentPID, protPacket.address(), protPacket.size(), protPacket.prot());
 
 	SendStatePacket(sock, true, "");
 }

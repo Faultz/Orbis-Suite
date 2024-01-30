@@ -34,7 +34,7 @@ const std::map<int, std::function<void(SceNetId s)>> API::APICommands =
 	{ API_DBG_BREAK, Debug::Stop },
 	{ API_DBG_RESUME, Debug::Resume },
 	//API_DBG_SIGNAL,
-	//API_DBG_STEP,
+	{ API_DBG_STEP, Debug::SetSingleStep },
 	//API_DBG_STEP_OVER,
 	//API_DBG_STEP_OUT,
 	//API_DBG_GET_CALLSTACK,
@@ -55,6 +55,11 @@ const std::map<int, std::function<void(SceNetId s)>> API::APICommands =
 	{ API_DBG_THREAD_LIST, Debug::GetThreadList },
 	{ API_DBG_THREAD_STOP, Debug::StopThread },
 	{ API_DBG_THREAD_RESUME, Debug::ResumeThread },
+
+	// Breakpoint Commands
+	{ API_DBG_BREAKPOINT_SET, Debug::SetBreakpoint },
+	{ API_DBG_BREAKPOINT_REMOVE, Debug::RemoveBreakpoint },
+	{ API_DBG_BREAKPOINT_LIST, Debug::GetBreakpointList },
 
 	// Watchpoint Commands
 	{ API_DBG_WATCHPOINT_SET, Debug::SetWatchpoint },
@@ -77,7 +82,9 @@ const std::map<int, std::function<void(SceNetId s)>> API::APICommands =
 
 	// Ext
 	{ API_EXT_GET_PAGES, Library::GetPageList },
-	{ API_EXT_GET_THREAD_INFO, Debug::GetThreadInfo }
+	{ API_EXT_GET_THREAD_INFO, Debug::GetThreadInfo },
+	{ API_EXT_GET_NAMED_OBJECTS, Library::GetNamedObjectList },
+	{ API_EXT_SET_PROC_PROT, Debug::SetProcessProt }
 };
 
 void API::ListenerCallback(void* tdParam, SceNetId s, SceNetInAddr sin_addr)

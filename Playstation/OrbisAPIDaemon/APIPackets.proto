@@ -83,6 +83,8 @@ enum APICommand
 
 	API_EXT_GET_PAGES = 63;
 	API_EXT_GET_THREAD_INFO = 64;
+	API_EXT_GET_NAMED_OBJECTS = 65;
+	API_EXT_SET_PROC_PROT = 66;
 }
 
 enum AppState
@@ -259,6 +261,16 @@ message PagesListPacket
 	repeated PagePacket Pages = 1;
 }
 
+message NamedObjectPacket
+{
+	string Name = 1;
+}
+
+message NamedObjectListPacket
+{
+	repeated NamedObjectPacket Objects = 1;
+}
+
 message FilePacket
 {
 	string FilePath = 1;
@@ -287,4 +299,23 @@ message WatchpointPacket
 message WatchpointListPacket
 {
 	repeated WatchpointPacket Watchpoints = 1;
+}
+
+message BreakpointPacket
+{
+	uint32 Index = 1;
+	bool Enabled = 2;
+	uint64 Address = 3;
+}
+
+message BreakpointListPacket
+{
+	repeated BreakpointPacket Breakpoints = 1;
+}
+
+message SetProcessProtPacket
+{
+	uint64 Address = 1;
+	uint64 Size = 2;
+	int32 Prot = 3;
 }

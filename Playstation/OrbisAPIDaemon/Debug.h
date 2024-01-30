@@ -3,35 +3,32 @@
 
 struct Registers
 {
-	//struct {
-	//	uint64_t r_r15;
-	//	uint64_t r_r14;
-	//	uint64_t r_r13;
-	//	uint64_t r_r12;
-	//	uint64_t r_r11;
-	//	uint64_t r_r10;
-	//	uint64_t r_r9;
-	//	uint64_t r_r8;
-	//	uint64_t r_rdi;
-	//	uint64_t r_rsi;
-	//	uint64_t r_rbp;
-	//	uint64_t r_rbx;
-	//	uint64_t r_rdx;
-	//	uint64_t r_rcx;
-	//	uint64_t r_rax;
-	//	uint32_t r_trapno;
-	//	uint16_t r_fs;
-	//	uint16_t r_gs;
-	//	uint32_t r_err;
-	//	uint16_t r_es;
-	//	uint16_t r_ds;
-	//	uint64_t r_rip;
-	//	uint64_t r_cs;
-	//	uint64_t r_rflags;
-	//	uint64_t r_rsp;
-	//	uint64_t r_ss;
-	//};
-	uint64_t regs[25];
+	uint64_t r_r15;
+	uint64_t r_r14;
+	uint64_t r_r13;
+	uint64_t r_r12;
+	uint64_t r_r11;
+	uint64_t r_r10;
+	uint64_t r_r9;
+	uint64_t r_r8;
+	uint64_t r_rdi;
+	uint64_t r_rsi;
+	uint64_t r_rbp;
+	uint64_t r_rbx;
+	uint64_t r_rdx;
+	uint64_t r_rcx;
+	uint64_t r_rax;
+	uint32_t r_trapno;
+	uint16_t r_fs;
+	uint16_t r_gs;
+	uint32_t r_err;
+	uint16_t r_es;
+	uint16_t r_ds;
+	uint64_t r_rip;
+	uint64_t r_cs;
+	uint64_t r_rflags;
+	uint64_t r_rsp;
+	uint64_t r_ss;
 };
 
 #define	DR7_DISABLE       0x00
@@ -67,12 +64,20 @@ public:
 	static void SetThreadRegisters(SceNetId sock);
 	static void GetThreadList(SceNetId sock);
 
+	static void SetSingleStep(SceNetId sock);
+
 	static void StopThread(SceNetId sock);
 	static void ResumeThread(SceNetId sock);
 
 	static void GetWatchpointList(SceNetId sock);
 	static void SetWatchpoint(SceNetId sock);
 	static void RemoveWatchpoint(SceNetId sock);
+
+	static void GetBreakpointList(SceNetId sock);
+	static void SetBreakpoint(SceNetId sock);
+	static void RemoveBreakpoint(SceNetId sock);
+
+	static void SetProcessProt(SceNetId sock);
 private:
 	static std::mutex DebugMtx;
 	static std::shared_ptr<ProcessMonitor> DebuggeeMonitor;
@@ -80,7 +85,6 @@ private:
 	static bool TryDetach(int pid);
 
 	// Ext
-	static bool ParseEvent(SceNetId sock, int* pid, int* event);
 	static bool SuspendDebug();
 	static void ResumeDebug();
 

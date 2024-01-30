@@ -8,6 +8,7 @@ public:
 	static void ReloadLibrary(SceNetId Sock);
 	static void GetLibraryList(SceNetId Sock);
 	static void GetPageList(SceNetId Sock);
+	static void GetNamedObjectList(SceNetId s);
 private:
 
 };
