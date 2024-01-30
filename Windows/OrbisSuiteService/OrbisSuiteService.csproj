@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.25.2" />
     <PackageReference Include="H.Pipes" Version="2.0.53" />
     <PackageReference Include="H.Pipes.AccessControl" Version="2.0.53" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
@@ -35,6 +36,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OrbisLib\OrbisLib2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="API\" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

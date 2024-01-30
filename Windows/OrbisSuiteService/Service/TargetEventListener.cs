@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using OrbisLib2.Common.Dispatcher;
 using System.Net;
 using Microsoft.Extensions.Logging;
+using System.Windows.Controls;
 
 namespace OrbisSuiteService.Service
 {
@@ -50,7 +51,14 @@ namespace OrbisSuiteService.Service
                     break;
 
                 case (int)EventId.EVENT_EXCEPTION:
-                    _Dispatcher.PublishEvent(new ForwardPacket(ForwardPacket.PacketType.Intercept, ipAddress));
+                    var packet = new ForwardPacket(ForwardPacket.PacketType.Intercept, ipAddress);
+
+                    var rawPacket = s.ReceiveSize();
+                    var InterruptPacket = DebuggerInterruptPacket.Parser.ParseFrom(rawPacket);
+
+                    packet.Break = new Break() { Reason = 0, Interrupt = InterruptPacket };
+
+                    _Dispatcher.PublishEvent(packet);
                     break;
 
                 case (int)EventId.EVENT_CONTINUE:
@@ -62,7 +70,7 @@ namespace OrbisSuiteService.Service
                     break;
 
                 case (int)EventId.EVENT_ATTACH:
-                    var packet = new ForwardPacket(ForwardPacket.PacketType.ProcessAttach, ipAddress);
+                    packet = new ForwardPacket(ForwardPacket.PacketType.ProcessAttach, ipAddress);
                     packet.ProcessId = s.RecvInt32();
                     _Dispatcher.PublishEvent(packet);
                     break;
