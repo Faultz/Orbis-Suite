@@ -35,11 +35,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OrbisLib\OrbisLib2.csproj" />
+    <Folder Include="API\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="API\" />
+    <ProjectReference Include="..\OrbisLib\OrbisLib2.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

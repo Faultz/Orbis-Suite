@@ -56,7 +56,43 @@ namespace OrbisSuiteService.Service
                     var rawPacket = s.ReceiveSize();
                     var InterruptPacket = DebuggerInterruptPacket.Parser.ParseFrom(rawPacket);
 
-                    packet.Break = new Break() { Reason = 0, Interrupt = InterruptPacket };
+                    DebuggerInterrupt customInterrupt = new DebuggerInterrupt
+                    {
+                        ThreadId = InterruptPacket.ThreadId,
+                        Status = InterruptPacket.Status,
+                        Name = InterruptPacket.Name,
+                        Registers = new Registers
+                        {
+                            r15 = InterruptPacket.Registers.R15,
+                            r14 = InterruptPacket.Registers.R14,
+                            r13 = InterruptPacket.Registers.R13,
+                            r12 = InterruptPacket.Registers.R12,
+                            r11 = InterruptPacket.Registers.R11,
+                            r10 = InterruptPacket.Registers.R10,
+                            r9 = InterruptPacket.Registers.R9,
+                            r8 = InterruptPacket.Registers.R8,
+                            rdi = InterruptPacket.Registers.Rdi,
+                            rsi = InterruptPacket.Registers.Rsi,
+                            rbp = InterruptPacket.Registers.Rbp,
+                            rbx = InterruptPacket.Registers.Rbx,
+                            rdx = InterruptPacket.Registers.Rdx,
+                            rcx = InterruptPacket.Registers.Rcx,
+                            rax = InterruptPacket.Registers.Rax,
+                            trapno = InterruptPacket.Registers.Trapno,
+                            fs = InterruptPacket.Registers.Fs,
+                            gs = InterruptPacket.Registers.Gs,
+                            err = InterruptPacket.Registers.Err,
+                            es = InterruptPacket.Registers.Es,
+                            ds = InterruptPacket.Registers.Ds,
+                            rip = InterruptPacket.Registers.Rip,
+                            cs = InterruptPacket.Registers.Cs,
+                            rflags = InterruptPacket.Registers.Rflags,
+                            rsp = InterruptPacket.Registers.Rsp,
+                            ss = InterruptPacket.Registers.Ss
+                        }
+                    };
+
+                    packet.Break = new Break() { Reason = 0, Interrupt = customInterrupt };
 
                     _Dispatcher.PublishEvent(packet);
                     break;

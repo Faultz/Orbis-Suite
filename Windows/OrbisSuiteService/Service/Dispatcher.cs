@@ -5,6 +5,7 @@ using System.IO.Pipes;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using H.Pipes.AccessControl;
+using Google.Protobuf;
 
 namespace OrbisSuiteService.Service
 {
@@ -33,10 +34,17 @@ namespace OrbisSuiteService.Service
             // start the pipe server.
             _PipeServer.StartAsync();
 
+            _PipeServer.ClientConnected += _PipeServer_ClientConnected;
+
             //Helpers
             _DBWatcher.DBChanged += _DBWatcher_DBChanged;
             _TargetWatcher = new TargetWatcher(this);
             _TargetEventListener = new TargetEventListener(this, _Logger);
+        }
+
+        private async void _PipeServer_ClientConnected(object? sender, H.Pipes.Args.ConnectionEventArgs<ForwardPacket> e)
+        {
+            _Logger.LogInformation($"Client {e.Connection.PipeName} is now connected!");
         }
 
         private void _DBWatcher_DBChanged()
