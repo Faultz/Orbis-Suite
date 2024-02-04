@@ -1,5 +1,6 @@
 ﻿using OrbisLib2.Common.Database.Types;
 using Google.Protobuf;
+using System;
 
 namespace OrbisLib2.Common.Dispatcher
 {
@@ -48,11 +49,52 @@ namespace OrbisLib2.Common.Dispatcher
     }
 
     [Serializable]
+    public class Registers
+    {
+        public ulong r15 { get; set; }
+        public ulong r14 { get; set; }
+        public ulong r13 { get; set; }
+        public ulong r12 { get; set; }
+        public ulong r11 { get; set; }
+        public ulong r10 { get; set; }
+        public ulong r9 { get; set; }
+        public ulong r8 { get; set; }
+        public ulong rdi { get; set; }
+        public ulong rsi { get; set; }
+        public ulong rbp { get; set; }
+        public ulong rbx { get; set; }
+        public ulong rdx { get; set; }
+        public ulong rcx { get; set; }
+        public ulong rax { get; set; }
+        public uint trapno { get; set; }
+        public uint fs { get; set; }
+        public uint gs { get; set; }
+        public ulong err { get; set; }
+        public uint es { get; set; }
+        public uint ds { get; set; }
+        public ulong rip { get; set; }
+        public ulong cs { get; set; }
+        public ulong rflags { get; set; }
+        public ulong rsp { get; set; }
+        public ulong ss { get; set; }
+    }
+
+    [Serializable]
+    public class DebuggerInterrupt
+    {
+        public uint ThreadId { get; set; }
+        public uint Status { get; set; }
+        public string Name { get; set; }
+        public Registers Registers { get; set; }
+    }
+
+
+    [Serializable]
     public class Break
     {
-        public int Reason { get; set; }
+        public int? Reason { get; set; }
 
-        public DebuggerInterruptPacket Interrupt { get; set; }
+        public DebuggerInterrupt? Interrupt { get; set; }
     }
 
     [Serializable]

@@ -1,6 +1,7 @@
 ﻿using H.Pipes;
 using Microsoft.Extensions.Logging;
 using OrbisLib2.General;
+using System.IO.Pipes;
 
 namespace OrbisLib2.Common.Dispatcher
 {
@@ -34,7 +35,7 @@ namespace OrbisLib2.Common.Dispatcher
                     break;
 
                 case ForwardPacket.PacketType.Intercept:
-                    Events.RaiseProcInterceptEvent(e.Message.SenderIPAddress);
+                    Events.RaiseProcInterceptEvent(e.Message.SenderIPAddress, e.Message.Break.Interrupt);
                     break;
 
                 case ForwardPacket.PacketType.Continue:

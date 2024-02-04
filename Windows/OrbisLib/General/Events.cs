@@ -1,4 +1,5 @@
 ﻿using OrbisLib2.Common.Database.Types;
+using OrbisLib2.Common.Dispatcher;
 using OrbisLib2.Targets;
 
 namespace OrbisLib2.General
@@ -6,10 +7,12 @@ namespace OrbisLib2.General
     public class ProcInterceptEvent : EventArgs
     {
         public Target SendingTarget { get; private set; }
+        public DebuggerInterrupt Interrupt { get; private set; }
 
-        public ProcInterceptEvent(Target sendingTarget)
+        public ProcInterceptEvent(Target sendingTarget, DebuggerInterrupt interrupt)
         {
             SendingTarget = sendingTarget;
+            Interrupt = interrupt;
         }
     }
 
@@ -178,12 +181,12 @@ namespace OrbisLib2.General
         /// Fires an event for when the Target's proccess were attached to has reached an intercepted state.
         /// </summary>
         /// <param name="IPAddr">The sending Target Address.</param>
-        internal static void RaiseProcInterceptEvent(string IPAddr)
+        internal static void RaiseProcInterceptEvent(string IPAddr, DebuggerInterrupt interrupt)
         {
             var sendingTarget = TargetManager.GetTarget(x => x.IPAddress == IPAddr);
             if(sendingTarget != null)
             {
-                ProcIntercept?.Invoke(null, new ProcInterceptEvent(sendingTarget));
+                ProcIntercept?.Invoke(null, new ProcInterceptEvent(sendingTarget, interrupt));
             }
         }
 

@@ -55,27 +55,70 @@ namespace OrbisLib2.Targets
         {
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgBreak, async (Socket Sock) =>
             {
-                await Sock.SendInt32Async(pid);
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    await Sock.SendInt32Async(pid);
 
-                return new ResultState { Succeeded = true };
+                    return await API.GetState(Sock);
+                }
             });
         }
         public async Task<ResultState> Kill(int pid)
         {
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgKill, async (Socket Sock) =>
             {
-                await Sock.SendInt32Async(pid);
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    await Sock.SendInt32Async(pid);
 
-                return new ResultState { Succeeded = true };
+                    return new ResultState { Succeeded = true };
+                }
             });
         }
         public async Task<ResultState> Resume(int pid)
         {
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgResume, async (Socket Sock) =>
             {
-                await Sock.SendInt32Async(pid);
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    await Sock.SendInt32Async(pid);
 
-                return new ResultState { Succeeded = true };
+                    return new ResultState { Succeeded = true };
+                }
+            });
+        }
+        public async Task<ResultState> StopThread(int lwpid)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgThreadStop, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    await Sock.SendInt32Async(lwpid);
+
+                    return new ResultState { Succeeded = true };
+                }
+            });
+        }
+        public async Task<ResultState> ResumeThread(int lwpid)
+        {
+            return await API.SendCommand(Target, 1000, APICommand.ApiDbgThreadResume, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    await Sock.SendInt32Async(lwpid);
+
+                    return new ResultState { Succeeded = true };
+                }
             });
         }
 
@@ -83,39 +126,76 @@ namespace OrbisLib2.Targets
         {
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgBreakpointSet, async (Socket Sock) =>
             {
-                var result = await API.SendNextPacket(Sock, new BreakpointPacket { Index = (uint)index, Enabled = true, Address = address });
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var result = await API.SendNextPacket(Sock, new BreakpointPacket { Index = (uint)index, Enabled = true, Address = address });
 
-                return new ResultState { Succeeded = true };
-            });
+                    if (!result.Succeeded)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"{result.ErrorMessage}" };
+
+                    return new ResultState { Succeeded = true };
+                }   });
         }
 
         public async Task<ResultState> RemoveBreakpoint(int index)
         {
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgBreakpointRemove, async (Socket Sock) =>
             {
-                var result = await API.SendNextPacket(Sock, new BreakpointPacket { Index = (uint)index, Enabled = true, Address = 0 });
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var result = await API.SendNextPacket(Sock, new BreakpointPacket { Index = (uint)index, Enabled = true, Address = 0 });
+                    
+                    if (!result.Succeeded)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"{result.ErrorMessage}" };
 
-                return new ResultState { Succeeded = true };
+                    return new ResultState { Succeeded = true };
+                }
             });
         }
 
         public async Task<ResultState> SetWatchpoint(int index, ulong address, WatchpointLength length, WatchpointType type)
         {
+            if (index > 3)
+                return new ResultState { Succeeded = false, ErrorMessage = "index > 3 && index must not be over 4" };
+
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgWatchpointSet, async (Socket Sock) =>
             {
-                var result = await API.SendNextPacket(Sock, new WatchpointPacket { Index = (uint)index, Enabled = true, Address = address,  Length = (uint)length, Type = (uint)type });
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var result = await API.SendNextPacket(Sock, new WatchpointPacket { Index = (uint)index, Enabled = true, Address = address, Length = (uint)length, Type = (uint)type });
 
-                return new ResultState { Succeeded = true };
+                    if (!result.Succeeded)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"{result.ErrorMessage}" };
+
+                    return new ResultState { Succeeded = true };
+                }
             });
         }
 
         public async Task<ResultState> RemoveWatchpoint(int index)
         {
+            if (index > 3)
+                return new ResultState { Succeeded = false, ErrorMessage = "index > 3 && index must not be over 4" };
+
             return await API.SendCommand(Target, 1000, APICommand.ApiDbgWatchpointRemove, async (Socket Sock) =>
             {
-                var result = await API.SendNextPacket(Sock, new WatchpointPacket { Index = (uint)index, Enabled = true, Address = 0, Length = 0, Type = 0 });
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var result = await API.SendNextPacket(Sock, new WatchpointPacket { Index = (uint)index, Enabled = true, Address = 0, Length = 0, Type = 0 });
 
-                return new ResultState { Succeeded = true };
+                    if (!result.Succeeded)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"{result.ErrorMessage}" };
+
+                    return new ResultState { Succeeded = true };
+                }
             });
         }
 
@@ -123,12 +203,100 @@ namespace OrbisLib2.Targets
         {
             return await API.SendCommand(Target, 1000, APICommand.ApiExtSetProcProt, async (Socket Sock) =>
             {
-                var result = await API.SendNextPacket(Sock, new SetProcessProtPacket { Address = address,  Size = size, Prot = prot, });
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var result = await API.SendNextPacket(Sock, new SetProcessProtPacket { Address = address, Size = size, Prot = prot, });
 
-                return new ResultState { Succeeded = true };
+                    if (!result.Succeeded)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"{result.ErrorMessage}" };
+
+                    return new ResultState { Succeeded = true };
+                }
             });
         }
 
+        public async Task<(ResultState, RegistersPacket)> GetRegisters(uint ThreadId)
+        {
+            var tempThreadList = new RegistersPacket();
+
+            var result = await API.SendCommand(Target, 1000, APICommand.ApiDbgGetReg, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    await Sock.SendInt32Async((int)ThreadId);
+
+                    var rawPacket = await Sock.ReceiveSizeAsync();
+                    var Packet = RegistersPacket.Parser.ParseFrom(rawPacket);
+
+                    tempThreadList = Packet;
+
+                    return new ResultState { Succeeded = true };
+                }
+            });
+
+            return (result, tempThreadList);
+        }
+        public async Task<(ResultState, List<WatchpointPacket>)> GetWatchpoints()
+        {
+            var tempWatchpointList = new List<WatchpointPacket>();
+
+            var result = await API.SendCommand(Target, 1000, APICommand.ApiDbgBreakpointList, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var rawPacket = await Sock.ReceiveSizeAsync();
+                    var Packet = WatchpointListPacket.Parser.ParseFrom(rawPacket);
+
+                    if (Packet.Watchpoints.Count == 0)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"Packet returned with a empty watchpoint list: {Packet.Watchpoints.Count}" };
+
+                    foreach (var watchpoint in Packet.Watchpoints)
+                    {
+                        WatchpointPacket breakpointPacket = new WatchpointPacket { Index = watchpoint.Index, Enabled = watchpoint.Enabled, Address = watchpoint.Address, Length = watchpoint.Length, Type = watchpoint.Type };
+                        tempWatchpointList.Add(breakpointPacket);
+                    }
+
+                    return new ResultState { Succeeded = true };
+                }
+            });
+
+            return (result, tempWatchpointList);
+        }
+
+        public async Task<(ResultState, List<BreakpointPacket>)> GetBreakpoints()
+        {
+            var tempBreakpointList = new List<BreakpointPacket>();
+
+            var result = await API.SendCommand(Target, 1000, APICommand.ApiDbgBreakpointList, async (Socket Sock) =>
+            {
+                if (await Sock.RecvInt32Async() != 1)
+                    return new ResultState { Succeeded = false, ErrorMessage = $"The target {Target.Name} ({Target.IPAddress}) is not currently debugging any process." };
+                else
+                {
+                    var rawPacket = await Sock.ReceiveSizeAsync();
+                    var Packet = BreakpointListPacket.Parser.ParseFrom(rawPacket);
+
+                    if (Packet.Breakpoints.Count == 0)
+                        return new ResultState { Succeeded = false, ErrorMessage = $"Packet returned with a empty breakpoint list: {Packet.Breakpoints.Count}" };
+
+                    foreach (var breakpoint in Packet.Breakpoints)
+                    {
+                        BreakpointPacket breakpointPacket = new BreakpointPacket { Index = breakpoint.Index, Enabled = breakpoint.Enabled, Address = breakpoint.Address };
+                        tempBreakpointList.Add(breakpointPacket);
+                    }
+
+                    return new ResultState { Succeeded = true };
+                }
+            });
+
+            return (result, tempBreakpointList);
+        }
 
         public async Task<(ResultState, List<ThreadInfoPacket>)> GetThreadList()
         {
@@ -198,10 +366,7 @@ namespace OrbisLib2.Targets
 
         public async Task<ResultState> Detach()
         {
-            return await API.SendCommand(Target, 400, APICommand.ApiDbgDetach, async (Socket Sock) =>
-            {
-                return await API.GetState(Sock);
-            });
+            return await API.SendCommand(Target, 400, APICommand.ApiDbgDetach, API.GetState);
         }
 
         public async Task<(ResultState, int ProcessId)> GetCurrentProcessId()
