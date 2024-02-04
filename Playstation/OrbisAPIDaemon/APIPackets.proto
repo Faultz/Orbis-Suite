@@ -319,3 +319,86 @@ message SetProcessProtPacket
 	uint64 Size = 2;
 	int32 Prot = 3;
 }
+
+message Envxmm {
+    uint32 en_cw = 1;         // control word (16 bits)
+    uint32 en_sw = 2;         // status word (16 bits)
+    uint32 en_tw = 3;         // tag word (8 bits)
+    uint32 en_zero = 4;       // zero field (8 bits)
+    uint32 en_opcode = 5;     // opcode last executed (11 bits)
+    uint64 en_rip = 6;        // floating point instruction pointer
+    uint64 en_rdp = 7;        // floating operand pointer
+    uint32 en_mxcsr = 8;      // SSE control/status register
+    uint32 en_mxcsr_mask = 9; // valid bits in mxcsr
+}
+
+message Acc {
+    bytes fp_bytes = 1;       // Fixed-size byte array (10 bytes)
+    // private bytes fp_pad = 2; // This field is private and not included in protobuf
+}
+
+message Xmmacc {
+    bytes xmm_bytes = 1;      // Fixed-size byte array (16 bytes)
+}
+
+message Ymmacc {
+    bytes ymm_bytes = 1;      // Fixed-size byte array (16 bytes)
+}
+
+message XstateHdr {
+    uint64 xstate_bv = 1;
+    // private bytes xstate_rsrv0 = 2;  // This field is private and not included in protobuf
+    // private bytes xstate_rsrv = 3;   // This field is private and not included in protobuf
+}
+
+message SavefpuXstate {
+    XstateHdr sx_hd = 1;
+    repeated Ymmacc sx_ymm = 2; // Repeated field for array of Ymmacc structures
+}
+
+message Fpregs {
+    Envxmm svn_env = 1;
+    repeated Acc sv_fp = 2;     // Repeated field for array of Acc structures
+    repeated Xmmacc sv_xmm = 3; // Repeated field for array of Xmmacc structures
+    // private bytes sv_pad = 4;  // This field is private and not included in protobuf
+    SavefpuXstate sv_xstate = 5;
+}
+
+message RegistersPacket
+{
+	uint64 r15 = 1;
+	uint64 r14 = 2;
+	uint64 r13 = 3;
+	uint64 r12 = 4;
+	uint64 r11 = 5;
+	uint64 r10 = 6;
+	uint64 r9 = 7;
+	uint64 r8 = 8;
+	uint64 rdi = 9;
+	uint64 rsi = 10;
+	uint64 rbp = 11;
+	uint64 rbx = 12;
+	uint64 rdx = 13;
+	uint64 rcx = 14;
+	uint64 rax = 15;
+	uint32 trapno = 16;
+	uint32 fs = 17;
+	uint32 gs = 18;
+	uint64 err = 19;
+	uint32 es = 20;
+	uint32 ds = 21;
+	uint64 rip = 22;
+	uint64 cs = 23;
+	uint64 rflags = 24;
+	uint64 rsp = 25;
+	uint64 ss = 26;
+}
+
+message DebuggerInterruptPacket
+{
+	uint32 ThreadId = 1;
+	uint32 Status = 2;
+	string Name = 3;
+	RegistersPacket Registers = 4;
+	Fpregs FloatRegisters = 5;
+}

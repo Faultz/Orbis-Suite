@@ -66,7 +66,6 @@
     </Link>
     <PostBuildEvent>
       <Command>python $(SolutionDir)Scripts\make_fself-3.py  $(OutputPath)$(TargetName).elf  $(OutputPath)eboot.bin --paid 0x3800000000010003 --auth-info 000000000000000000000000001C004000FF000000000080000000000000000000000000000000000000008000400040000000000000008000000000000000080040FFFF000000F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-del $(OutputPath)$(ProjectName).elf
 
 </Command>
     </PostBuildEvent>
@@ -114,6 +113,7 @@ del $(OutputPath)$(ProjectName).elf
     <ClCompile Include="APIPackets.pb.cc" />
     <ClCompile Include="AppDatabase.cpp" />
     <ClCompile Include="Apps.cpp" />
+    <ClCompile Include="Breakpoint.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="Flash.cpp" />
@@ -126,7 +126,9 @@ del $(OutputPath)$(ProjectName).elf
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|ORBIS'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Target.cpp" />
+    <ClCompile Include="Thread.cpp" />
     <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="Watchpoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="APIPackets.proto" />

@@ -39,6 +39,9 @@
     <Filter Include="Header Files\API\Proto">
       <UniqueIdentifier>{d7aa3bd5-c1da-4e23-b0b8-d9ca48b89cea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\API\CmdGroups\Debug">
+      <UniqueIdentifier>{d1d17672-be04-4cd8-96a9-c46116a1b7b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -129,6 +132,15 @@
     </ClCompile>
     <ClCompile Include="Events.cpp">
       <Filter>Source Files\API</Filter>
+    </ClCompile>
+    <ClCompile Include="Breakpoint.cpp">
+      <Filter>Source Files\API\CmdGroups\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Watchpoint.cpp">
+      <Filter>Source Files\API\CmdGroups\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
+      <Filter>Source Files\API\CmdGroups\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

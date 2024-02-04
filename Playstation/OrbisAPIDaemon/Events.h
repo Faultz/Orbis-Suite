@@ -20,7 +20,7 @@ public:
 
     static void AddHost(SceNetInAddr_t HostAddress);
     static void RemoveHost(SceNetInAddr_t HostAddress);
-    static void SendEvent(int EventId, int pid = -1);
+    static void SendEvent(int EventId, int pid = -1, void* arg = nullptr);
 
 private:
     static std::vector<SceNetInAddr_t> HostList;

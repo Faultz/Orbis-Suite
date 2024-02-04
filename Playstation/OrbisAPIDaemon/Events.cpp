@@ -30,7 +30,7 @@ void Events::RemoveHost(SceNetInAddr_t HostAddress)
 	}
 }
 
-void Events::SendEvent(int EventId, int pid)
+void Events::SendEvent(int EventId, int pid, void* arg)
 {
 	if (HostList.empty())
 	{
@@ -54,6 +54,13 @@ void Events::SendEvent(int EventId, int pid)
 			if (EventId == EVENT_ATTACH && pid != -1)
 			{
 				Sockets::SendInt(sock, pid);
+			}
+
+			if (EventId == EVENT_EXCEPTION)
+			{
+				std::shared_ptr<DebuggerInterruptPacket>* packet = reinterpret_cast<std::shared_ptr<DebuggerInterruptPacket>*>(arg);
+
+				SendProtobufPacket(sock, *packet->get());
 			}
 
 			// Close the socket.

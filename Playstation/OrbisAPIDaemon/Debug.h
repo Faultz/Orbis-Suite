@@ -1,35 +1,6 @@
 #pragma once
 #include "ProcessMonitor.h"
-
-struct Registers
-{
-	uint64_t r_r15;
-	uint64_t r_r14;
-	uint64_t r_r13;
-	uint64_t r_r12;
-	uint64_t r_r11;
-	uint64_t r_r10;
-	uint64_t r_r9;
-	uint64_t r_r8;
-	uint64_t r_rdi;
-	uint64_t r_rsi;
-	uint64_t r_rbp;
-	uint64_t r_rbx;
-	uint64_t r_rdx;
-	uint64_t r_rcx;
-	uint64_t r_rax;
-	uint32_t r_trapno;
-	uint16_t r_fs;
-	uint16_t r_gs;
-	uint32_t r_err;
-	uint16_t r_es;
-	uint16_t r_ds;
-	uint64_t r_rip;
-	uint64_t r_cs;
-	uint64_t r_rflags;
-	uint64_t r_rsp;
-	uint64_t r_ss;
-};
+#include "KernelInterface.h"
 
 #define	DR7_DISABLE       0x00
 #define	DR7_LOCAL_ENABLE  0x01
@@ -81,6 +52,7 @@ public:
 private:
 	static std::mutex DebugMtx;
 	static std::shared_ptr<ProcessMonitor> DebuggeeMonitor;
+	static WatchpointData WatchData;
 
 	static bool TryDetach(int pid);
 
@@ -88,7 +60,12 @@ private:
 	static bool SuspendDebug();
 	static void ResumeDebug();
 
+	// Logging
+	static void PrintRegister(std::string regName, uint64_t reg, std::unique_ptr<OrbisProcessPage[]>& pages, int count);
+	static void LogInterrupt(int lwpid, Registers registers);
+
 	// Process Events
 	static void OnExit();
 	static void OnException(int status);
+	static void OnInterrupt(int status, int pid);
 };

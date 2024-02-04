@@ -38,7 +38,7 @@ const std::map<int, std::function<void(SceNetId s)>> API::APICommands =
 	//API_DBG_STEP_OVER,
 	//API_DBG_STEP_OUT,
 	//API_DBG_GET_CALLSTACK,
-	//{ API_DBG_GET_REG, Debug::GetThreadRegisters },
+	{ API_DBG_GET_REG, Debug::GetThreadRegisters },
 	//{ API_DBG_SET_REG, Debug::SetThreadRegisters },
 	//API_DBG_GET_FREG,
 	//API_DBG_SET_FREG,
